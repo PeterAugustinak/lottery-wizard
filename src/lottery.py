@@ -24,33 +24,28 @@ class Lottery:
                            "Example: 2 7 13 28 29 32 46\n"
                            "If you want every toss random numbers, just press ENTER.")
 
-        validation = self.parse_and_validate_input(user_input) if user_input != "" else "aa"
-        if type(validation) == list:
-            print(f"Your numbers for lottery are: {[' '.join(i) for i in validation]}")
-            self.specified_numbers = validation
-        else:
-            print(validation)
-            self.numbers_input()
+        self.specified_numbers = self.parse_and_validate_input(user_input) if user_input != "" else False
+        self.start_lottery()
 
-    @staticmethod
-    def parse_and_validate_input(user_input):
+    def parse_and_validate_input(self, user_input):
         """This will parse and validate user input. If the input is incorrect, back to initial question"""
-        potential_numbers = [element for element in user_input.split()]
-        correct_numbers = []
-        for element in potential_numbers:
-            try:
-                correct_numbers.append(int(element))
-            except ValueError:
-                return "Please input numbers the way described."
-        corrected_numbers = [number for number in correct_numbers if number in range(1, 50)]
-        if len(corrected_numbers) == 6:
-            return corrected_numbers
-        else:
-            return "Please input exactly 6 numbers from 1 to 49."
+        try:
+            numbers = [int(element) for element in user_input.split() if int(element) in range(1, 50)]
+            return numbers if len(numbers) == 6 else self.failed_validation()
+        except ValueError:
+            self.failed_validation()
+
+    def failed_validation(self):
+        """This prints the reason of incorrect validation and starts user input again"""
+        print("Please enter numbers exactly the way specified.")
+        self.numbers_input()
 
 
     def start_lottery(self):
         pass
+
+    def random_numbers(self):
+        """Picks 6 random numbers instead of the user"""
 
     def check_attempts(self):
         pass
