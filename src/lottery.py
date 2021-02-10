@@ -1,18 +1,18 @@
 # coding=utf-8
 """The Lottery project"""
 
+# local library import
+from texts import texts
 # standard library imports
 import random
 from os import system
-import sys
 # external library imports
 from prettytable import PrettyTable
 
 
 class Lottery:
     """Lottery class"""
-    sys.setrecursionlimit(10**9)
-
+    lang = None
     # if user does not want to specify own numbers, every toss the random number will be set
     specified_numbers = False
     # current numbers
@@ -33,12 +33,23 @@ class Lottery:
         pass
 
     # USER INPUT BEFORE LOTTERY CAN START ###
+    def language_input(self):
+        """User will at first select language for the Lottery app"""
+        system('cls')
+        lang_input = input("1. ENG\n"
+                           "2. SVK\n")
+
+        if lang_input == "2":
+            self.lang = 1
+        else:
+            self.lang = 0
+
+        self.numbers_input()
+
     def numbers_input(self):
         """This clarifies if user want to use his own numbers or just leave it for random AI choices"""
         system('cls')
-        user_input = input("Please input your 6 numbers from 1 to 49)\n"
-                           "Example: 2 7 13 28 29 32 46\n"
-                           "If you want every toss random numbers, just press ENTER: ")
+        user_input = input(f"{texts['intro1'][self.lang]}\n{texts['intro2'][self.lang]}\n{texts['intro3'][self.lang]}")
 
         self.specified_numbers = self.parse_and_validate_input(user_input) if user_input != "" else False
         self.decide_lottery_numbers()
@@ -54,7 +65,7 @@ class Lottery:
 
     def failed_validation(self):
         """This prints the reason of incorrect validation and starts user input again"""
-        print("Please enter numbers exactly the way specified.")
+        print(texts['val_error'][self.lang])
         self.numbers_input()
 
     # START OF LOTTERY DRAWINGS ... ###
@@ -72,7 +83,7 @@ class Lottery:
         self.lottery_won()
 
     def decide_lottery_numbers(self):
-        """This check before lottery start if user speified numbers, if not, it picks random before every toss"""
+        """This check before lottery start if user speified numbers, if not, it picks random before every draw"""
         self.lottery_numbers = sorted(self.specified_numbers if self.specified_numbers else self.random_numbers())
 
     @staticmethod
@@ -81,7 +92,7 @@ class Lottery:
         return [random.randrange(1, 50) for _ in range(6)]
 
     def evaluate_round(self):
-        """This will compare user numbers against drawn numbers for the round"""
+        """This will compare user numbers against drawn numbers for the dra"""
         guessed = len(set(self.lottery_numbers).intersection(self.drawn_numbers))
 
         if guessed == 0: self.guessed_zero += 1
@@ -93,33 +104,26 @@ class Lottery:
         if guessed == 6: self.guessed_six += 1
         self.toss_counter += 1
 
-    def lottery_won(self):
-        """In case of 6 numbers of 6 was guessed correctly - means lottery is won, the tossing will stop"""
-        print()
-        print(f"!!! YOU WON ON TOSS #{self.toss_counter}!!!")
-        print(f"Your numbers was {self.lottery_numbers} and drawn numbers was {self.drawn_numbers}!!!")
-        print(f'If you will put a lottery 1 per week, you need approximatelly {self.count_years()} to win.')
-
     def print_results(self):
         """This prints current result after every 1 000 toss"""
         table = PrettyTable()
 
-        table.field_names = ["Guessed", "Times", "Succes %"]
-        table.align["Guessed"] = "l"
-        table.align["Times"] = "r"
-        table.align["Succes %"] = "r"
-        table.add_row(["0 numbers", self.guessed_zero, self.count_percentage(self.guessed_zero)])
-        table.add_row(["1 number", self.guessed_one, self.count_percentage(self.guessed_one)])
-        table.add_row(["2 numbers", self.guessed_two, self.count_percentage(self.guessed_two)])
-        table.add_row(["3 numbers", self.guessed_three, self.count_percentage(self.guessed_three)])
-        table.add_row(["4 numbers", self.guessed_four, self.count_percentage(self.guessed_four)])
-        table.add_row(["5 numbers", self.guessed_five, self.count_percentage(self.guessed_five)])
-        table.add_row(["6 numbers", self.guessed_six, self.count_percentage(self.guessed_six)])
+        table.field_names = [texts['table_f1'][self.lang], texts['table_f2'][self.lang], texts['table_f3'][self.lang]]
+        table.align[texts['table_f1'][self.lang]] = "l"
+        table.align[texts['table_f2'][self.lang]] = "r"
+        table.align[texts['table_f3'][self.lang]] = "r"
+        table.add_row([f"0 {texts['num'][self.lang]}", self.guessed_zero, self.count_percentage(self.guessed_zero)])
+        table.add_row([f"1 {texts['nums'][self.lang]}", self.guessed_one, self.count_percentage(self.guessed_one)])
+        table.add_row([f"2 {texts['numss'][self.lang]}", self.guessed_two, self.count_percentage(self.guessed_two)])
+        table.add_row([f"3 {texts['numss'][self.lang]}", self.guessed_three, self.count_percentage(self.guessed_three)])
+        table.add_row([f"4 {texts['numss'][self.lang]}", self.guessed_four, self.count_percentage(self.guessed_four)])
+        table.add_row([f"5 {texts['numss'][self.lang]}", self.guessed_five, self.count_percentage(self.guessed_five)])
+        table.add_row([f"6 {texts['numss'][self.lang]}", self.guessed_six, self.count_percentage(self.guessed_six)])
 
         system('cls')
-        print(f"DRAW #{self.toss_counter}")
-        print(f"Your lottery numbers are: {self.lottery_numbers}")
-        print(f"Drawn numbers are: {self.drawn_numbers}")
+        print(f"{texts['draw'][self.lang]}{self.toss_counter}")
+        print(f"{texts['your_nums'][self.lang]}{self.lottery_numbers}")
+        print(f"{texts['drawn_nums'][self.lang]}{self.drawn_numbers}")
         print(table, end='\r')
 
     def count_years(self):
@@ -130,6 +134,13 @@ class Lottery:
         """This counts percentage value of how many guess of the particular number of total draw was success"""
         return round(100 / self.toss_counter * correct_guesses, 2)
 
+    def lottery_won(self):
+        """In case of 6 numbers of 6 was guessed correctly - means lottery is won, the tossing will stop"""
+        print()
+        print(f"!!! {texts['won1'][self.lang]}{self.toss_counter}!!!")
+        print(f"{texts['your_was'][self.lang]} {self.lottery_numbers} {texts['drawn_was'][self.lang]} "
+              f"{self.drawn_numbers}!!!")
+        print(f"{texts['won2'][self.lang]} {self.count_years()} {texts['won3'][self.lang]}")
 
-Lottery().numbers_input()
 
+Lottery().language_input()
