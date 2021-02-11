@@ -14,10 +14,12 @@ from prettytable import PrettyTable
 class Lottery:
     """Lottery class"""
     lang = None
+    # counter for user input (in case of incorrect input only
+    user_incorrect_input = False
     # numbers for lottery
-    defined_numbers_for_draw = None
-    random_numbers_for_draw = None
-    drawn_numbers = None
+    defined_numbers_for_draw = []
+    random_numbers_for_draw = []
+    drawn_numbers = []
     # after every toss, it will be evaluated how many numbers user guessed correctly
     guessed_zero = [0, 0]
     guessed_one = [0, 0]
@@ -40,20 +42,31 @@ class Lottery:
               "2. SVK\n")
 
         lang_input = msvcrt.getch()
-        if int(lang_input) != 2:
+        # 0 = English, 1 = Slovak
+        try:
+            if int(lang_input) != 2:
+                self.lang = 0
+            else:
+                self.lang = 1
+        except ValueError:
             self.lang = 0
-        else:
-            self.lang = 1
 
         system('cls')
         self.numbers_input()
 
     def numbers_input(self):
         """This clarifies if user want to use his own numbers or just leave it for random AI choices"""
-        user_input = input(f"{texts['intro1'][self.lang]}\n{texts['intro2'][self.lang]}\n-> ")
+        if not self.user_incorrect_input:
+            self.intro_text()
+        user_input = input("-> ")
 
         self.defined_numbers_for_draw = self.parse_and_validate_input(user_input)
         self.start_lottery()
+
+    def intro_text(self):
+        """Prints intro navugation text"""
+        # this is in separate method because we don't wanna to print it again after every invalid user input.
+        print(f"{texts['intro1'][self.lang]}\n{texts['intro2'][self.lang]}\n")
 
     def parse_and_validate_input(self, user_input):
         """This will parse and validate user input. If the input is incorrect, back to initial question"""
@@ -66,18 +79,19 @@ class Lottery:
     def failed_validation(self):
         """This prints the reason of incorrect validation and starts user input again"""
         print(texts['val_error'][self.lang])
+        self.user_incorrect_input = True
         self.numbers_input()
 
     # START OF LOTTERY DRAWINGS ... ###
     def start_lottery(self):
         """This will toss lottery"""
-        system('cls')
         while self.guessed_six[0] == 0 and self.guessed_six[1] == 0:
             self.random_numbers_for_draw = sorted(self.random_numbers())
             self.drawn_numbers = sorted(self.random_numbers())
             self.evaluate_round(self.defined_numbers_for_draw, 0)
             self.evaluate_round(self.random_numbers_for_draw, 1)
 
+            system('cls')
             self.print_results()
             self.toss_counter += 1
 
@@ -158,9 +172,11 @@ class Lottery:
                        '',
                        self.guessed_six[1], self.count_percentage(self.guessed_six[1])]),
 
-        system('cls')
+        table.title = f"Your numbers: {self.defined_numbers_for_draw}"
+
         print(f"{texts['draw'][self.lang]}{self.toss_counter:,}")
         print(f"{texts['drawn_nums'][self.lang]}{self.drawn_numbers}")
+
         print(table)  # .get_string(title=f"{texts['title'][self.lang]}", end='\r'))
 
     def count_years(self):
