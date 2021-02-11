@@ -159,7 +159,7 @@ class Lottery:
                        self.guessed_six[1], self.count_percentage(self.guessed_six[1])]),
 
         system('cls')
-        print(f"{texts['draw'][self.lang]}{self.toss_counter}")
+        print(f"{texts['draw'][self.lang]}{self.toss_counter:,}")
         print(f"{texts['drawn_nums'][self.lang]}{self.drawn_numbers}")
         print(table)  # .get_string(title=f"{texts['title'][self.lang]}", end='\r'))
 
@@ -169,7 +169,7 @@ class Lottery:
 
     def count_percentage(self, correct_guesses):
         """This counts percentage value of how many guess of the particular number of total draw was success"""
-        return round(100 / self.toss_counter * correct_guesses, 2)
+        return round(100 / self.toss_counter * correct_guesses, 3)
 
     def lottery_won(self):
         """In case of 6 numbers of 6 was guessed correctly - means lottery is won, the tossing will stop"""
