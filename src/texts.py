@@ -1,7 +1,7 @@
 # coding=utf-8
 
 texts = {
-    'intro1': ['Please input your 6 numbers from 1 to 49)', 'Prosím zadaj 6 čísel od 1 do 49'],
+    'intro1': ['Please input your 6 numbers from 1 to 49', 'Prosím zadaj 6 čísel od 1 do 49'],
     'intro2': ['Example: 2 7 13 28 29 32 46', 'Príklad: 2 7 13 28 29 32 46'],
     'intro3': ['If you want every draw random numbers, just press ENTER: ',
                'Ak si želáš staviť v každom ťahu náhodné čísla, stlač ENTER: '],

@@ -6,6 +6,7 @@ from texts import texts
 # standard library imports
 import random
 from os import system
+import msvcrt
 # external library imports
 from prettytable import PrettyTable
 
@@ -36,10 +37,11 @@ class Lottery:
     def language_input(self):
         """User will at first select language for the Lottery app"""
         system('cls')
-        lang_input = input("1. ENG\n"
-                           "2. SVK\n")
+        print("1. ENG\n"
+              "2. SVK\n")
 
-        if lang_input == "2":
+        lang_input = msvcrt.getch()
+        if int(lang_input) == 2:
             self.lang = 1
         else:
             self.lang = 0
