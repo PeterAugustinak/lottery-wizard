@@ -20,16 +20,18 @@ class Lottery:
     defined_numbers_for_draw = []
     random_numbers_for_draw = []
     drawn_numbers = []
-    # after every toss, it will be evaluated how many numbers user guessed correctly
-    guessed_zero = [0, 0]
-    guessed_one = [0, 0]
-    guessed_two = [0, 0]
-    guessed_three = [0, 0]
-    guessed_four = [0, 0]
-    guessed_five = [0, 0]
-    guessed_six = [0, 0]
     # counter of lottery tosses
     toss_counter = 1
+    # storing sucessfull guesses after every draw
+    guessed_table = {
+        'guessed_zero': [0, 0],
+        'guessed_one': [0, 0],
+        'guessed_two': [0, 0],
+        'guessed_three': [0, 0],
+        'guessed_four': [0, 0],
+        'guessed_five': [0, 0],
+        'guessed_six': [0, 0]
+    }
 
     def __init__(self):
         pass
@@ -66,7 +68,7 @@ class Lottery:
     def intro_text(self):
         """Prints intro navugation text"""
         # this is in separate method because we don't wanna to print it again after every invalid user input.
-        print(f"{texts['intro1'][self.lang]}\n{texts['intro2'][self.lang]}\n")
+        print(f"{texts['intro1'][self.lang]}\n{texts['intro2'][self.lang]}")
 
     def parse_and_validate_input(self, user_input):
         """This will parse and validate user input. If the input is incorrect, back to initial question"""
@@ -85,7 +87,7 @@ class Lottery:
     # START OF LOTTERY DRAWINGS ... ###
     def start_lottery(self):
         """This will toss lottery"""
-        while self.guessed_six[0] == 0 and self.guessed_six[1] == 0:
+        while self.guessed_table['guessed_six'][0] == 0 and self.guessed_table['guessed_six'][1] == 0:
             self.random_numbers_for_draw = sorted(self.random_numbers())
             self.drawn_numbers = sorted(self.random_numbers())
             self.evaluate_round(self.defined_numbers_for_draw, 0)
@@ -110,74 +112,77 @@ class Lottery:
         """
         guessed = len(set(numbers_for_draw).intersection(self.drawn_numbers))
 
-        if guessed == 0: self.guessed_zero[inpt] += 1
-        if guessed == 1: self.guessed_one[inpt] += 1
-        if guessed == 2: self.guessed_two[inpt] += 1
-        if guessed == 3: self.guessed_three[inpt] += 1
-        if guessed == 4: self.guessed_four[inpt] += 1
-        if guessed == 5: self.guessed_five[inpt] += 1
-        if guessed == 6: self.guessed_six[inpt] += 1
+        if guessed == 0: self.guessed_table['guessed_zero'][inpt] += 1
+        if guessed == 1: self.guessed_table['guessed_one'][inpt] += 1
+        if guessed == 2: self.guessed_table['guessed_two'][inpt] += 1
+        if guessed == 3: self.guessed_table['guessed_three'][inpt] += 1
+        if guessed == 4: self.guessed_table['guessed_four'][inpt] += 1
+        if guessed == 5: self.guessed_table['guessed_five'][inpt] += 1
+        if guessed == 6: self.guessed_table['guessed_six'][inpt] += 1
 
     def print_results(self):
-        """This prints current result after every 1 000 toss"""
-        table = PrettyTable()
+        """This prints current results"""
+        table_info = PrettyTable()
+        # table_info.field_names = ['aaa', 'bbb']
 
-        table.field_names = [texts['table_f1'][self.lang],
-                             texts['table_gap1'][self.lang],
-                             texts['table_f2'][self.lang],
-                             texts['table_f3'][self.lang],
-                             texts['table_gap2'][self.lang],
-                             texts['table_f4'][self.lang],
-                             texts['table_f5'][self.lang]]
+        table_info.add_rows = ([
+            [
+                "1",
+                texts['draw'][self.lang],
+                self.toss_counter
+            ],
+            [
+                "2",
+                texts['your_nums'][self.lang],
+                self.defined_numbers_for_draw
+            ],
+            [
+                "3",
+                texts['random_nums'][self.lang],
+                self.random_numbers_for_draw
+            ],
+            [
+                "4",
+                texts['drawn_nums'][self.lang],
+                self.drawn_numbers]]
+        )
 
-        table.align[texts['table_f1'][self.lang]] = "l"
-        table.align[texts['table_f2'][self.lang]] = "r"
-        table.align[texts['table_f3'][self.lang]] = "r"
-        table.align[texts['table_f4'][self.lang]] = "r"
-        table.align[texts['table_f5'][self.lang]] = "r"
+        print(table_info, end="\r")
+        # print()
 
-        table.add_row([f"0 {texts['num'][self.lang]}",
-                       '',               
-                       self.guessed_zero[0], self.count_percentage(self.guessed_zero[0]),
-                       '',
-                       self.guessed_zero[1], self.count_percentage(self.guessed_zero[1])]),
-        table.add_row([f"1 {texts['nums'][self.lang]}",
-                       '',               
-                       self.guessed_one[0], self.count_percentage(self.guessed_one[0]),
-                       '',
-                       self.guessed_one[1], self.count_percentage(self.guessed_one[1])]),
-        table.add_row([f"2 {texts['numss'][self.lang]}",
-                       '',               
-                       self.guessed_two[0], self.count_percentage(self.guessed_two[0]),
-                       '',
-                       self.guessed_two[1], self.count_percentage(self.guessed_two[1])]),
-        table.add_row([f"3 {texts['numss'][self.lang]}",
-                       '',               
-                       self.guessed_three[0], self.count_percentage(self.guessed_three[0]),
-                       '',
-                       self.guessed_three[1], self.count_percentage(self.guessed_three[1])]),
-        table.add_row([f"4 {texts['numss'][self.lang]}",
-                       '',               
-                       self.guessed_four[0], self.count_percentage(self.guessed_four[0]),
-                       '',
-                       self.guessed_four[1], self.count_percentage(self.guessed_four[1])]),
-        table.add_row([f"5 {texts['numss'][self.lang]}",
-                       '',               
-                       self.guessed_five[0], self.count_percentage(self.guessed_five[0]),
-                       '',
-                       self.guessed_five[1], self.count_percentage(self.guessed_five[1])]),
-        table.add_row([f"6 {texts['numss'][self.lang]}",
-                       '',               
-                       self.guessed_six[0], self.count_percentage(self.guessed_six[0]),
-                       '',
-                       self.guessed_six[1], self.count_percentage(self.guessed_six[1])]),
+        table_stat = PrettyTable()
 
-        table.title = f"Your numbers: {self.defined_numbers_for_draw}"
+        table_stat.field_names = [texts['table_f1'][self.lang],
+                                  texts['table_f2'][self.lang],
+                                  texts['table_f3'][self.lang],
+                                  texts['table_f4'][self.lang],
+                                  texts['table_f5'][self.lang]]
 
-        print(f"{texts['draw'][self.lang]}{self.toss_counter:,}")
-        print(f"{texts['drawn_nums'][self.lang]}{self.drawn_numbers}")
+        table_stat.align[texts['table_f1'][self.lang]] = "l"
+        table_stat.align[texts['table_f2'][self.lang]] = "r"
+        table_stat.align[texts['table_f3'][self.lang]] = "r"
+        table_stat.align[texts['table_f4'][self.lang]] = "r"
+        table_stat.align[texts['table_f5'][self.lang]] = "r"
 
-        print(table)  # .get_string(title=f"{texts['title'][self.lang]}", end='\r'))
+        for i, key in zip(range(len(self.guessed_table)), self.guessed_table.keys()):
+            if i == 0:
+                nm = 'num'
+            elif i == 1:
+                nm = 'nums'
+            else:
+                nm = 'numss'
+
+            table_stat.add_row(
+                [
+                    f"{i} {texts[nm][self.lang]}",
+                    self.guessed_table[key][0],
+                    self.count_percentage(self.guessed_table[key][0]),
+                    self.guessed_table[key][1],
+                    self.count_percentage(self.guessed_table[key][1]),
+                ]
+             )
+
+        print(table_stat, end="\r")
 
     def count_years(self):
         """This counts the time evaluated to win"""
