@@ -122,8 +122,18 @@ class Lottery:
 
     def print_results(self):
         """This prints current results"""
+
+        table_info = self.create_table_info()
+        table_stat = self.create_table_stat()
+
+        print(table_info)
+        print(table_stat)
+
+    def create_table_info(self):
+        """Builds table for drawing information"""
+
         table_info = PrettyTable()
-        # table_info.field_names = ['aaa', 'bbb']
+        table_info.field_names = ['aaa', 'bbb']
 
         table_info.add_rows = ([
             [
@@ -147,9 +157,10 @@ class Lottery:
                 self.drawn_numbers]]
         )
 
-        print(table_info, end="\r")
-        # print()
+        return table_info
 
+    def create_table_stat(self):
+        """Builds table for drawing stats"""
         table_stat = PrettyTable()
 
         table_stat.field_names = [texts['table_f1'][self.lang],
@@ -182,7 +193,7 @@ class Lottery:
                 ]
              )
 
-        print(table_stat, end="\r")
+        return table_stat
 
     def count_years(self):
         """This counts the time evaluated to win"""
