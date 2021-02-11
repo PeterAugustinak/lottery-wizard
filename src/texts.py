@@ -42,14 +42,14 @@ texts = {
         ["DRAW #",
          "ŤAH #"],
     'your_nums':
-        ["Your lottery numbers are: ",
-         "Tvoje čísla sú: "],
+        ["Your numbers",
+         "Tvoje čísla"],
     'random_nums':
-        ["Rndom numbers for this draw are: ",
-         "Náhodné čísla pre tento ťah sú: "],
+        ["Random numbers for draw",
+         "Náhodné čísla pre ťah"],
     'drawn_nums':
-        ["Drawn numbers are: ",
-         "Vylosované čísla sú: "],
+        ["Drawn numbers",
+         "Vylosované čísla"],
 
     'won1':
         ['YOU WON ON TOSS #',

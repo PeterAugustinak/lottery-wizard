@@ -62,7 +62,7 @@ class Lottery:
             self.intro_text()
         user_input = input("-> ")
 
-        self.defined_numbers_for_draw = self.parse_and_validate_input(user_input)
+        self.defined_numbers_for_draw = sorted(self.parse_and_validate_input(user_input))
         self.start_lottery()
 
     def intro_text(self):
@@ -127,36 +127,34 @@ class Lottery:
         table_stat = self.create_table_stat()
 
         print(table_info)
+        print()
         print(table_stat)
 
     def create_table_info(self):
         """Builds table for drawing information"""
 
-        table_info = PrettyTable()
-        table_info.field_names = ['aaa', 'bbb']
+        table_info = PrettyTable(header=False)
+        # table_info.field_names = ['aaa', 'bbb', 'ccc']
 
-        table_info.add_rows = ([
+        table_info.add_rows([
             [
-                "1",
                 texts['draw'][self.lang],
-                self.toss_counter
+                f"{self.toss_counter:,}                          "
             ],
             [
-                "2",
-                texts['your_nums'][self.lang],
+                texts['your_nums'][self.lang].upper(),
                 self.defined_numbers_for_draw
             ],
             [
-                "3",
-                texts['random_nums'][self.lang],
+                texts['random_nums'][self.lang].upper(),
                 self.random_numbers_for_draw
             ],
             [
-                "4",
-                texts['drawn_nums'][self.lang],
+                texts['drawn_nums'][self.lang].upper(),
                 self.drawn_numbers]]
         )
 
+        table_info.align = "l"
         return table_info
 
     def create_table_stat(self):
