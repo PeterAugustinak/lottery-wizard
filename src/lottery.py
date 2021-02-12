@@ -134,7 +134,6 @@ class Lottery:
         """Builds table for drawing information"""
 
         table_info = PrettyTable(header=False)
-        # table_info.field_names = ['aaa', 'bbb', 'ccc']
 
         table_info.add_rows([
             [
