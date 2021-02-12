@@ -32,6 +32,7 @@ class Lottery:
         'guessed_five': [0, 0],
         'guessed_six': [0, 0]
     }
+    numbers_chart = {}
 
     def __init__(self):
         pass
@@ -125,10 +126,13 @@ class Lottery:
 
         table_info = self.create_table_info()
         table_stat = self.create_table_stat()
+        table_chart = self.create_table_chart()
 
         print(table_info)
         print()
         print(table_stat)
+        print()
+        print(table_chart)
 
     def create_table_info(self):
         """Builds table for drawing information"""
@@ -191,6 +195,11 @@ class Lottery:
              )
 
         return table_stat
+
+    def create_table_chart(self):
+        """This creates table with numbers chart"""
+        pass
+
 
     def count_years(self):
         """This counts the time evaluated to win"""
