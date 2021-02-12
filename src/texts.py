@@ -64,17 +64,17 @@ texts = {
         ['TOP 5 MOST vs LESS drawn numbers',
          'TOP 5 NAJVIAC vs NAJMENEJ ťahané čísla'],
     'chart_top_nm':
-        ['Number (M)',
-         'Číslo (T)'],
+        ['Number ↑',
+         'Číslo ↑'],
     'chart_top_val':
-        ['Drawn x (M)',
-         'Padlo x (T)'],
+        ['Drawn x ↑',
+         'Padlo x ↑'],
     'chart_down_nm':
-        ['Number (L)',
-         'Číslo (D)'],
+        ['Number ↓',
+         'Číslo ↓'],
     'chart_down_val':
-        ['Drawn (L)',
-         'Padlo x (D)'],
+        ['Drawn x ↓',
+         'Padlo x ↓'],
     'won2':
         [
             'If you will put a lottery 1 per week, you need approximatelly',
