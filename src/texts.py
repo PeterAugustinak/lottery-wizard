@@ -60,6 +60,21 @@ texts = {
     'drawn_was':
         ['and drawn numbers was',
          'a vylosované čísla boli'],
+    'chart_title':
+        ['TOP 5 MOST vs LESS drawn numbers',
+         'TOP 5 NAJVIAC vs NAJMENEJ ťahané čísla'],
+    'chart_top_nm':
+        ['Number (M)',
+         'Číslo (T)'],
+    'chart_top_val':
+        ['Drawn x (M)',
+         'Padlo x (T)'],
+    'chart_down_nm':
+        ['Number (L)',
+         'Číslo (D)'],
+    'chart_down_val':
+        ['Drawn (L)',
+         'Padlo x (D)'],
     'won2':
         [
             'If you will put a lottery 1 per week, you need approximatelly',

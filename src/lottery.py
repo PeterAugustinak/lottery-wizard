@@ -9,6 +9,7 @@ from os import system
 import msvcrt
 # external library imports
 from prettytable import PrettyTable
+from itertools import islice
 
 
 class Lottery:
@@ -21,7 +22,7 @@ class Lottery:
     random_numbers_for_draw = []
     drawn_numbers = []
     # counter of lottery tosses
-    toss_counter = 1
+    draw_counter = 1
     # storing sucessfull guesses after every draw
     guessed_table = {
         'guessed_zero': [0, 0],
@@ -96,7 +97,7 @@ class Lottery:
 
             system('cls')
             self.print_results()
-            self.toss_counter += 1
+            self.draw_counter += 1
 
         self.lottery_won()
 
@@ -110,6 +111,7 @@ class Lottery:
         This will compare numbers for deaw against drawn numbers for the round
         inpt: 0 -> user defined numbers
         inpt: 1 -> random defined numbers
+        Also it creates number chart
         """
         guessed = len(set(numbers_for_draw).intersection(self.drawn_numbers))
 
@@ -120,6 +122,13 @@ class Lottery:
         if guessed == 4: self.guessed_table['guessed_four'][inpt] += 1
         if guessed == 5: self.guessed_table['guessed_five'][inpt] += 1
         if guessed == 6: self.guessed_table['guessed_six'][inpt] += 1
+
+        # putting data data into numbers chart
+        for number in self.drawn_numbers:
+            if number in self.numbers_chart.keys():
+                self.numbers_chart[number] += 1
+            else:
+                self.numbers_chart.update({number: 1})
 
     def print_results(self):
         """This prints current results"""
@@ -142,7 +151,7 @@ class Lottery:
         table_info.add_rows([
             [
                 texts['draw'][self.lang],
-                f"{self.toss_counter:,}                          "
+                f"{self.draw_counter:,}                          "
             ],
             [
                 texts['your_nums'][self.lang].upper(),
@@ -198,21 +207,40 @@ class Lottery:
 
     def create_table_chart(self):
         """This creates table with numbers chart"""
-        pass
+        table_chart = PrettyTable()
 
+        table_chart.title = texts['chart_title'][self.lang]
+        table_chart.field_names = [texts['chart_top_nm'][self.lang],
+                                   texts['chart_top_val'][self.lang],
+                                   texts['chart_down_nm'][self.lang],
+                                   texts['chart_down_val'][self.lang]]
+
+        table_chart.align[texts['chart_top_val'][self.lang]] = "r"
+        table_chart.align[texts['chart_down_val'][self.lang]] = "r"
+
+        sorted_chart_top = dict(sorted(self.numbers_chart.items(), key=lambda item: item[1], reverse=True))
+        sorted_chart_down = dict(sorted(self.numbers_chart.items(), key=lambda item: item[1]))
+
+        top = list(islice(sorted_chart_top.items(), 0, 5))
+        down = list(islice(sorted_chart_down.items(), 0, 5))
+
+        for n_top, n_down in zip(top, down[::-1]):
+            table_chart.add_row([n_top[0], n_top[1], n_down[0], n_down[1]])
+
+        return table_chart
 
     def count_years(self):
         """This counts the time evaluated to win"""
-        return round(self.toss_counter / 52, 0)
+        return round(self.draw_counter / 52, 0)
 
     def count_percentage(self, correct_guesses):
         """This counts percentage value of how many guess of the particular number of total draw was success"""
-        return round(100 / self.toss_counter * correct_guesses, 3)
+        return round(100 / self.draw_counter * correct_guesses, 3)
 
     def lottery_won(self):
         """In case of 6 numbers of 6 was guessed correctly - means lottery is won, the tossing will stop"""
         print()
-        print(f"!!! {texts['won1'][self.lang]}{self.toss_counter}!!!")
+        print(f"!!! {texts['won1'][self.lang]}{self.draw_counter}!!!")
         # print(f"{texts['your_was'][self.lang]} {self.defined_numbers_for_draw} {texts['drawn_was'][self.lang]} "
         # f"{self.drawn_numbers}!!!")
         print(f"{texts['won2'][self.lang]} {self.count_years()} {texts['won3'][self.lang]}")
