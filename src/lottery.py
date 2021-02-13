@@ -39,8 +39,8 @@ class Lottery:
     }
     numbers_chart = {}
 
-    # def __init__(self):
-    #     pass
+    def __init__(self):
+        pass
 
     # USER INPUTS HANDLING BEFORE LOTTERY CAN START ###
     def language_input(self):
@@ -102,9 +102,11 @@ class Lottery:
         """This will parse and validate user input. If the input is incorrect, back to initial question"""
         try:
             numbers = [int(element) for element in user_input.split() if int(element) in range(1, 50)]
-            self.defined_numbers_for_draw = sorted(numbers) if len(numbers) == 6 \
-                else self.failed_validation('val_error_count')
-            self.user_no_or_incorrect_input = False
+            if len(numbers) == 6:
+                self.defined_numbers_for_draw = sorted(numbers)
+                self.user_no_or_incorrect_input = False
+            else:
+                self.failed_validation('val_error_count')
         except ValueError:
             self.failed_validation('val_error_int')
 
@@ -122,6 +124,7 @@ class Lottery:
             pool = int(user_input)
             if pool >= 35 or pool <= 100:
                 self.set_numbers_chart(pool)
+                self.user_no_or_incorrect_input = False
             else:
                 self.failed_validation('val_error_range')
         except ValueError:
@@ -175,10 +178,7 @@ class Lottery:
 
         # putting data data into numbers chart
         for number in self.drawn_numbers:
-            if number in self.numbers_chart.keys():
-                self.numbers_chart[number] += 1
-            else:
-                self.numbers_chart.update({number: 1})
+            self.numbers_chart[number] += 1
 
     def print_results(self):
         """This prints current results"""
@@ -199,13 +199,17 @@ class Lottery:
         table_input.add_rows([
             [
                 texts['your_nums'][self.lang].upper(),
-                f"{self.defined_numbers_for_draw}        "
+                f"{' '.join(map(str, self.defined_numbers_for_draw))}        "
             ],
             [
                 texts['random_nums'][self.lang].upper(),
-                self.random_numbers_for_draw
-            ]
-            ])
+                ' '.join(map(str, self.random_numbers_for_draw))
+            ],
+            [
+                texts['draws_p_w'][self.lang].upper(),
+                self.draws_per_week
+            ],
+        ])
 
         table_input.align = "l"
         return table_input
@@ -217,20 +221,16 @@ class Lottery:
 
         table_draw.add_rows([
             [
-                texts['draws_p_w'][self.lang].upper(),
-                self.draws_per_week
-            ],
-            [
                 texts['date'][self.lang].upper(),
                 self.count_date()
             ],
             [
                 texts['draw'][self.lang],
-                f"{self.draw_counter:,}                          "
+                f"{self.draw_counter:,}                       "
             ],
             [
                 texts['drawn_nums'][self.lang].upper(),
-                self.drawn_numbers]]
+                ' '.join(map(str, self.drawn_numbers))]]
         )
 
         table_draw.align = "l"
@@ -239,6 +239,7 @@ class Lottery:
     def create_table_stat(self):
         """Builds table for drawing stats"""
         table_stat = PrettyTable()
+        table_stat.title = texts['tab_title_stat'][self.lang]
 
         table_stat.field_names = [texts['table_f1'][self.lang],
                                   texts['table_f2'][self.lang],
@@ -276,7 +277,7 @@ class Lottery:
         """This creates table with numbers chart"""
         table_chart = PrettyTable()
 
-        table_chart.title = texts['chart_title'][self.lang]
+        table_chart.title = texts['tab_title_chart'][self.lang]
         table_chart.field_names = [texts['chart_top_nm'][self.lang],
                                    texts['chart_top_val'][self.lang],
                                    texts['chart_down_nm'][self.lang],

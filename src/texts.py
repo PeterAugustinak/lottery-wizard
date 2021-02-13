@@ -7,8 +7,8 @@ texts = {
             'Prosím zadaj 6 čísel od 1 do 49 a stlač ENTER.'],
     'intro2':
         [
-            '(example: 2 7 13 28 29 32 46)',
-            '(príklad: 2 7 13 28 29 32 46)'],
+            ' (example: 2 7 13 28 29 32 46)',
+            ' (príklad: 2 7 13 28 29 32 46)'],
     'val_error_int':
         [
             'Please enter valid numbers with one space between.',
@@ -21,6 +21,9 @@ texts = {
         [
             'Please enter the number in range specified.',
             'Prosím zadaj číslo v špecifikovanom rozmedzí.'],
+    'tab_title_stat':
+        ['COUNT OF GUESSED NUMBERS IN EVERY DRAW STATS',
+         'ŠTATISTIKA POČTU UHÁDNUTÝCH ČÍSEL PRE KAŽDÝ ŤAH'],
     'table_f1':
         [
             "Guessed",
@@ -68,9 +71,9 @@ texts = {
     'drawn_was':
         ['and drawn numbers was',
          'a vylosované čísla boli'],
-    'chart_title':
-        ['TOP 6 MOST vs LESS drawn numbers',
-         'TOP 6 NAJVIAC vs NAJMENEJ ťahané čísla'],
+    'tab_title_chart':
+        ['TOP 6 MOST VS LESS DRAWN NUMBERS',
+         'TOP 6 NAJVIAC VS NAJMENEJ ŤAHANÉ ČÍSLA'],
     'chart_top_nm':
         ['Number ↑',
          'Číslo ↑'],
@@ -101,15 +104,15 @@ texts = {
     'text_draws_per_input1': [
         'How many draws per week you want to bet?',
         'Na koľko ťahov týždenne chceš podať?'],
-    'text_draws_input2':
+    'text_draws_per_input2':
         [
-            '(example: 1)',
-            '(príklad: 1)'],
+            ' (example: 1)',
+            ' (príklad: 1)'],
     'text_pool_input1': [
         'How many numbers are in the pool for lottery? (35-100)',
         'Z koľkých čísel sa losuje v tejto lotérii (35-100)?'],
     'text_pool_input2':
         [
-            '(example: 49)',
-            '(príklad: 49)'],
+            ' (example: 49)',
+            ' (príklad: 49)'],
 }
