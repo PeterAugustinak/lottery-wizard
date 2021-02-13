@@ -11,8 +11,8 @@ texts = {
             '(príklad: 2 7 13 28 29 32 46)'],
     'val_error':
         [
-            'Please enter numbers exactly the way specified.',
-            'Prosím zadaj čísla presne ako je špecifikované'],
+            'Please enter exactly the way specified.',
+            'Prosím zadaj tak, ako je špecifikované'],
     'table_f1':
         [
             "Guessed",
@@ -89,5 +89,13 @@ texts = {
     'date':
         [
             'Week/Year',
-            'Týždeň/Rok ']
+            'Týždeň/Rok '],
+    'text_draws_per_input1': [
+        'How many draws per week you want to bet?',
+        'Na koľko ťahov týždenne chceš podať?'],
+    'text_draws_per_input2':
+        [
+            '(example: 1)',
+            '(príklad: 1)'],
+
 }

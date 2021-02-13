@@ -17,7 +17,7 @@ class Lottery:
     """Lottery class"""
     lang = None
     # counter for user input (in case of incorrect input only
-    user_incorrect_input = False
+    user_no_or_incorrect_input = True
     # numbers for lottery
     defined_numbers_for_draw = []
     random_numbers_for_draw = []
@@ -25,7 +25,7 @@ class Lottery:
     # counter of lottery tosses
     draw_counter = 1
     # date
-    current_date = datetime.today()
+    current_date = None
     draws_per_week = 7
     # storing sucessfull guesses after every draw
     guessed_table = {
@@ -60,35 +60,53 @@ class Lottery:
             self.lang = 0
 
         system('cls')
-        self.numbers_input()
+        self.user_inputs()
 
-    def numbers_input(self):
+    def user_inputs(self):
         """This clarifies if user want to use his own numbers or just leave it for random AI choices"""
-        if not self.user_incorrect_input:
-            self.intro_text()
-        user_input = input("-> ")
+        # ask user for input numbers till the format of input is correct
+        self.input_draw_numbers_text()
+        while self.user_no_or_incorrect_input:
+            user_numbers_input = input("-> ")
+            self.parse_and_validate_input(user_numbers_input)
 
-        self.defined_numbers_for_draw = sorted(self.parse_and_validate_input(user_input))
+        self.user_no_or_incorrect_input = True
+        # ask user for input draws per week value till the format is correct
+        self.input_draws_per_week_text()
+        while self.user_no_or_incorrect_input:
+            user_draw_per_week_input = input("-> ")
+            self.validate_draws_per_week_input(user_draw_per_week_input)
+
         self.start_lottery()
 
-    def intro_text(self):
-        """Prints intro navugation text"""
-        # this is in separate method because we don't wanna to print it again after every invalid user input.
+    def input_draw_numbers_text(self):
+        """Prints text explaining how to input numbers for draw"""
         print(f"{texts['intro1'][self.lang]}\n{texts['intro2'][self.lang]}")
+
+    def input_draws_per_week_text(self):
+        """Prints text explaining how to input draws per week"""
+        print(f"{texts['text_draws_per_input1'][self.lang]}\n{texts['text_draws_per_input2'][self.lang]}")
 
     def parse_and_validate_input(self, user_input):
         """This will parse and validate user input. If the input is incorrect, back to initial question"""
         try:
             numbers = [int(element) for element in user_input.split() if int(element) in range(1, 50)]
-            return numbers if len(numbers) == 6 else self.failed_validation()
+            self.defined_numbers_for_draw = sorted(numbers) if len(numbers) == 6 else self.failed_validation()
+            self.user_no_or_incorrect_input = False
+        except ValueError:
+            self.failed_validation()
+
+    def validate_draws_per_week_input(self, user_input):
+        """This validates user defined draws per week input"""
+        try:
+            self.draws_per_week = int(user_input)
+            self.user_no_or_incorrect_input = False
         except ValueError:
             self.failed_validation()
 
     def failed_validation(self):
         """This prints the reason of incorrect validation and starts user input again"""
-        print(texts['val_error'][self.lang])
-        self.user_incorrect_input = True
-        self.numbers_input()
+        print(f" {texts['val_error'][self.lang]}")
 
     # START OF LOTTERY DRAWINGS ... ###
     def start_lottery(self):
@@ -253,13 +271,13 @@ class Lottery:
     def count_date(self):
         """Counts passing the time by weeks"""
 
-        addition = timedelta(days=7)
-
-        if datetime.today() != self.current_date:
-            next_date = self.current_date + addition if self.draw_counter % self.draws_per_week == 0 else self.current_date
+        if self.current_date:
+            next_date = self.current_date + timedelta(days=7) if self.draw_counter % self.draws_per_week == 0 \
+                else self.current_date
         else:
+            self.current_date = datetime.today()
             next_date = self.current_date
-            
+
         current_week_year = datetime.date(next_date).isocalendar()
         week = current_week_year[1] if current_week_year[1] > 9 else f"0{current_week_year[1]}"
         year = current_week_year[0]
