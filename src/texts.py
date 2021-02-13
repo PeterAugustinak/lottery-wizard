@@ -9,10 +9,18 @@ texts = {
         [
             '(example: 2 7 13 28 29 32 46)',
             '(príklad: 2 7 13 28 29 32 46)'],
-    'val_error':
+    'val_error_int':
         [
-            'Please enter exactly the way specified.',
-            'Prosím zadaj tak, ako je špecifikované'],
+            'Please enter valid numbers with one space between.',
+            'Prosím zadaj číselné znaky s jednou medzerou medzi každým.'],
+    'val_error_count':
+        [
+            'Please enter that many numbers as are valid for draw.',
+            'Prosím zadaj presne toľko čísel, koľko je potrebné pre losovanie.'],
+    'val_error_range':
+        [
+            'Please enter the number in range specified.',
+            'Prosím zadaj číslo v špecifikovanom rozmedzí.'],
     'table_f1':
         [
             "Guessed",
@@ -93,9 +101,15 @@ texts = {
     'text_draws_per_input1': [
         'How many draws per week you want to bet?',
         'Na koľko ťahov týždenne chceš podať?'],
-    'text_draws_per_input2':
+    'text_draws_input2':
         [
             '(example: 1)',
             '(príklad: 1)'],
-
+    'text_pool_input1': [
+        'How many numbers are in the pool for lottery? (35-100)',
+        'Z koľkých čísel sa losuje v tejto lotérii (35-100)?'],
+    'text_pool_input2':
+        [
+            '(example: 49)',
+            '(príklad: 49)'],
 }

@@ -39,10 +39,10 @@ class Lottery:
     }
     numbers_chart = {}
 
-    def __init__(self):
-        pass
+    # def __init__(self):
+    #     pass
 
-    # USER INPUT BEFORE LOTTERY CAN START ###
+    # USER INPUTS HANDLING BEFORE LOTTERY CAN START ###
     def language_input(self):
         """User will at first select language for the Lottery app"""
         system('cls')
@@ -68,7 +68,14 @@ class Lottery:
         self.input_draw_numbers_text()
         while self.user_no_or_incorrect_input:
             user_numbers_input = input("-> ")
-            self.parse_and_validate_input(user_numbers_input)
+            self.parse_and_validate_draw_numbers_input(user_numbers_input)
+
+        self.user_no_or_incorrect_input = True
+        # ask user from how many numbers is going to be draw
+        self.input_lottery_pool_text()
+        while self.user_no_or_incorrect_input:
+            user_lottery_pool_input = input("-> ")
+            self.validate_lottery_pool_input(user_lottery_pool_input)
 
         self.user_no_or_incorrect_input = True
         # ask user for input draws per week value till the format is correct
@@ -87,14 +94,19 @@ class Lottery:
         """Prints text explaining how to input draws per week"""
         print(f"{texts['text_draws_per_input1'][self.lang]}\n{texts['text_draws_per_input2'][self.lang]}")
 
-    def parse_and_validate_input(self, user_input):
+    def input_lottery_pool_text(self):
+        """Prints text explaining how to input lottery pool nummbers"""
+        print(f"{texts['text_pool_input1'][self.lang]}\n{texts['text_pool_input2'][self.lang]}")
+
+    def parse_and_validate_draw_numbers_input(self, user_input):
         """This will parse and validate user input. If the input is incorrect, back to initial question"""
         try:
             numbers = [int(element) for element in user_input.split() if int(element) in range(1, 50)]
-            self.defined_numbers_for_draw = sorted(numbers) if len(numbers) == 6 else self.failed_validation()
+            self.defined_numbers_for_draw = sorted(numbers) if len(numbers) == 6 \
+                else self.failed_validation('val_error_count')
             self.user_no_or_incorrect_input = False
         except ValueError:
-            self.failed_validation()
+            self.failed_validation('val_error_int')
 
     def validate_draws_per_week_input(self, user_input):
         """This validates user defined draws per week input"""
@@ -102,11 +114,27 @@ class Lottery:
             self.draws_per_week = int(user_input)
             self.user_no_or_incorrect_input = False
         except ValueError:
-            self.failed_validation()
+            self.failed_validation('val_error_int')
 
-    def failed_validation(self):
+    def validate_lottery_pool_input(self, user_input):
+        """This validates user defined numbers in lottery pool"""
+        try:
+            pool = int(user_input)
+            if pool >= 35 or pool <= 100:
+                self.set_numbers_chart(pool)
+            else:
+                self.failed_validation('val_error_range')
+        except ValueError:
+            self.failed_validation('val_error_int')
+
+    def failed_validation(self, val_error):
         """This prints the reason of incorrect validation and starts user input again"""
-        print(f" {texts['val_error'][self.lang]}")
+        print(f" {texts[val_error][self.lang]}")
+
+    def set_numbers_chart(self, numbers_for_lottery):
+        """This will initiate the pool of numbers the particular lottery contain"""
+        for number in range(1, numbers_for_lottery + 1):
+            self.numbers_chart.update({number: 0})
 
     # START OF LOTTERY DRAWINGS ... ###
     def start_lottery(self):
