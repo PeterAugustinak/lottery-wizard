@@ -6,6 +6,7 @@ from texts import texts
 # standard library imports
 import random
 from os import system
+from datetime import datetime, timedelta
 import msvcrt
 # external library imports
 from prettytable import PrettyTable
@@ -23,6 +24,9 @@ class Lottery:
     drawn_numbers = []
     # counter of lottery tosses
     draw_counter = 1
+    # date
+    current_date = datetime.today()
+    draws_per_week = 7
     # storing sucessfull guesses after every draw
     guessed_table = {
         'guessed_zero': [0, 0],
@@ -133,41 +137,58 @@ class Lottery:
     def print_results(self):
         """This prints current results"""
 
-        table_info = self.create_table_info()
-        table_stat = self.create_table_stat()
-        table_chart = self.create_table_chart()
-
-        print(table_info)
+        print(self.create_table_input())
         print()
-        print(table_stat)
+        print(self.create_table_draw())
         print()
-        print(table_chart)
+        print(self.create_table_stat())
+        print()
+        print(self.create_table_chart())
 
-    def create_table_info(self):
-        """Builds table for drawing information"""
+    def create_table_input(self):
+        """Builds table for input information"""
 
-        table_info = PrettyTable(header=False)
+        table_input = PrettyTable(header=False)
 
-        table_info.add_rows([
-            [
-                texts['draw'][self.lang],
-                f"{self.draw_counter:,}                          "
-            ],
+        table_input.add_rows([
             [
                 texts['your_nums'][self.lang].upper(),
-                self.defined_numbers_for_draw
+                f"{self.defined_numbers_for_draw}        "
             ],
             [
                 texts['random_nums'][self.lang].upper(),
                 self.random_numbers_for_draw
+            ]
+            ])
+
+        table_input.align = "l"
+        return table_input
+
+    def create_table_draw(self):
+        """Builds table for drawing information"""
+
+        table_draw = PrettyTable(header=False)
+
+        table_draw.add_rows([
+            [
+                texts['draws_p_w'][self.lang].upper(),
+                self.draws_per_week
+            ],
+            [
+                texts['date'][self.lang].upper(),
+                self.count_date()
+            ],
+            [
+                texts['draw'][self.lang],
+                f"{self.draw_counter:,}                          "
             ],
             [
                 texts['drawn_nums'][self.lang].upper(),
                 self.drawn_numbers]]
         )
 
-        table_info.align = "l"
-        return table_info
+        table_draw.align = "l"
+        return table_draw
 
     def create_table_stat(self):
         """Builds table for drawing stats"""
@@ -221,17 +242,30 @@ class Lottery:
         sorted_chart_top = dict(sorted(self.numbers_chart.items(), key=lambda item: item[1], reverse=True))
         sorted_chart_down = dict(sorted(self.numbers_chart.items(), key=lambda item: item[1]))
 
-        top = list(islice(sorted_chart_top.items(), 0, 5))
-        down = list(islice(sorted_chart_down.items(), 0, 5))
+        top = list(islice(sorted_chart_top.items(), 0, 6))
+        down = list(islice(sorted_chart_down.items(), 0, 6))
 
         for n_top, n_down in zip(top, down[::-1]):
             table_chart.add_row([n_top[0], n_top[1], n_down[0], n_down[1]])
 
         return table_chart
 
-    def count_years(self):
-        """This counts the time evaluated to win"""
-        return round(self.draw_counter / 52, 0)
+    def count_date(self):
+        """Counts passing the time by weeks"""
+
+        addition = timedelta(days=7)
+
+        if datetime.today() != self.current_date:
+            next_date = self.current_date + addition if self.draw_counter % self.draws_per_week == 0 else self.current_date
+        else:
+            next_date = self.current_date
+            
+        current_week_year = datetime.date(next_date).isocalendar()
+        week = current_week_year[1] if current_week_year[1] > 9 else f"0{current_week_year[1]}"
+        year = current_week_year[0]
+
+        self.current_date = next_date
+        return f"{week}/{year}"
 
     def count_percentage(self, correct_guesses):
         """This counts percentage value of how many guess of the particular number of total draw was success"""
@@ -244,6 +278,10 @@ class Lottery:
         # print(f"{texts['your_was'][self.lang]} {self.defined_numbers_for_draw} {texts['drawn_was'][self.lang]} "
         # f"{self.drawn_numbers}!!!")
         print(f"{texts['won2'][self.lang]} {self.count_years()} {texts['won3'][self.lang]}")
+
+    def count_years(self):
+        """This counts the time evaluated to win"""
+        return round(self.draw_counter / 52, 0)
 
 
 Lottery().language_input()

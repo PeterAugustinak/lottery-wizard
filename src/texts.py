@@ -42,8 +42,8 @@ texts = {
         ["DRAW #",
          "ŤAH #"],
     'your_nums':
-        ["Your numbers",
-         "Tvoje čísla"],
+        ["Your numbers for draw",
+         "Tvoje čísla pre ťah"],
     'random_nums':
         ["Random numbers for draw",
          "Náhodné čísla pre ťah"],
@@ -61,8 +61,8 @@ texts = {
         ['and drawn numbers was',
          'a vylosované čísla boli'],
     'chart_title':
-        ['TOP 5 MOST vs LESS drawn numbers',
-         'TOP 5 NAJVIAC vs NAJMENEJ ťahané čísla'],
+        ['TOP 6 MOST vs LESS drawn numbers',
+         'TOP 6 NAJVIAC vs NAJMENEJ ťahané čísla'],
     'chart_top_nm':
         ['Number ↑',
          'Číslo ↑'],
@@ -82,5 +82,12 @@ texts = {
     'won3':
         ['years to win.',
          'rokov na výhru.'],
-
+    'draws_p_w':
+        [
+            'Draws per week',
+            'Počet losovaní týždenne'],
+    'date':
+        [
+            'Week/Year',
+            'Týždeň/Rok ']
 }
