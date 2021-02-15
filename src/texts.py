@@ -115,4 +115,11 @@ texts = {
         [
             ' (example: 49)',
             ' (príklad: 49)'],
+    'input_amount_of_draw1':
+        ['How many numbers is going to be drawn every draw in this lottery? (1-10)',
+         'Koľko čísel sa žrebuje v jednom ťahu v tejto lotérií? (1-10)'],
+    'input_amount_of_draw2':
+        [' (example: 6)',
+         ' (príklad: 6)']
 }
+

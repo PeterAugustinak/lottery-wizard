@@ -29,15 +29,16 @@ class Lottery:
     current_date = None
     draws_per_week = 7
     # storing sucessfull guesses after every draw
-    guessed_table = {
-        'guessed_zero': [0, 0],
-        'guessed_one': [0, 0],
-        'guessed_two': [0, 0],
-        'guessed_three': [0, 0],
-        'guessed_four': [0, 0],
-        'guessed_five': [0, 0],
-        'guessed_six': [0, 0]
-    }
+    # guessed_table = {
+    #     'guessed_zero': [0, 0],
+    #     'guessed_one': [0, 0],
+    #     'guessed_two': [0, 0],
+    #     'guessed_three': [0, 0],
+    #     'guessed_four': [0, 0],
+    #     'guessed_five': [0, 0],
+    #     'guessed_six': [0, 0]
+    # }
+    guessed_table = {}
     numbers_chart = {}
 
     def __init__(self):
@@ -65,18 +66,25 @@ class Lottery:
 
     def user_inputs(self):
         """This clarifies if user want to use his own numbers or just leave it for random AI choices"""
-        # ask user for input numbers till the format of input is correct
-        self.input_draw_numbers_text()
-        while self.user_no_or_incorrect_input:
-            user_numbers_input = input("-> ")
-            self.parse_and_validate_draw_numbers_input(user_numbers_input)
-
-        self.user_no_or_incorrect_input = True
         # ask user from how many numbers is going to be draw
         self.input_lottery_pool_text()
         while self.user_no_or_incorrect_input:
             user_lottery_pool_input = input("-> ")
             self.validate_lottery_pool_input(user_lottery_pool_input)
+
+        self.user_no_or_incorrect_input = True
+        # ask user how many numbers is going to be drawn
+        self.input_amount_of_draw_numbers_text()
+        while self.user_no_or_incorrect_input:
+            user_numbers_input = input("-> ")
+            self.parse_and_validate_draw_numbers_input(user_numbers_input)
+
+        self.user_no_or_incorrect_input = True
+        # ask user for input numbers till the format of input is correct
+        self.input_draw_numbers_text()
+        while self.user_no_or_incorrect_input:
+            user_numbers_input = input("-> ")
+            self.parse_and_validate_draw_numbers_input(user_numbers_input)
 
         self.user_no_or_incorrect_input = True
         # ask user for input draws per week value till the format is correct
@@ -87,6 +95,14 @@ class Lottery:
 
         self.start_lottery()
 
+    def input_lottery_pool_text(self):
+        """Prints text explaining how to input lottery pool nummbers"""
+        print(f"{texts['text_pool_input1'][self.lang]}\n{texts['text_pool_input2'][self.lang]}")
+
+    def input_amount_of_draw_numbers_text(self):
+        """Print text explaining how to input amount of numbers to be drawn"""
+        print(f"{texts['input_amount_of_draw1'][self.lang]}\n{texts['input_amount_of_draw2'][self.lang]}")
+
     def input_draw_numbers_text(self):
         """Prints text explaining how to input numbers for draw"""
         print(f"{texts['intro1'][self.lang]}\n{texts['intro2'][self.lang]}")
@@ -94,10 +110,6 @@ class Lottery:
     def input_draws_per_week_text(self):
         """Prints text explaining how to input draws per week"""
         print(f"{texts['text_draws_per_input1'][self.lang]}\n{texts['text_draws_per_input2'][self.lang]}")
-
-    def input_lottery_pool_text(self):
-        """Prints text explaining how to input lottery pool nummbers"""
-        print(f"{texts['text_pool_input1'][self.lang]}\n{texts['text_pool_input2'][self.lang]}")
 
     def parse_and_validate_draw_numbers_input(self, user_input):
         """This will parse and validate user input. If the input is incorrect, back to initial question"""
@@ -141,6 +153,12 @@ class Lottery:
         for number in range(1, numbers_for_lottery + 1):
             self.numbers_chart.update({number: 0})
 
+    def set_guessed_table(self, amount_of_draw_numbers):
+        """This will set disctionary to store how much time the particular nnumber was guessed based on amount of
+        numbers to draw"""
+        for number in range(0, amount_of_draw_numbers + 1):
+            self.guessed_table.update({number: [0, 0]})
+
     # START OF LOTTERY DRAWINGS ... ###
     def start_lottery(self):
         """This will toss lottery"""
@@ -162,20 +180,13 @@ class Lottery:
 
     def evaluate_round(self, numbers_for_draw, inpt):
         """
-        This will compare numbers for deaw against drawn numbers for the round
-        inpt: 0 -> user defined numbers
-        inpt: 1 -> random defined numbers
+        This will compare numbers for draw against drawn numbers for the round
+        inpt: 0 -> user defined draw numbers
+        inpt: 1 -> random defined draw numbers
         Also it creates number chart
         """
         guessed = len(set(numbers_for_draw).intersection(self.drawn_numbers))
-
-        if guessed == 0: self.guessed_table['guessed_zero'][inpt] += 1
-        if guessed == 1: self.guessed_table['guessed_one'][inpt] += 1
-        if guessed == 2: self.guessed_table['guessed_two'][inpt] += 1
-        if guessed == 3: self.guessed_table['guessed_three'][inpt] += 1
-        if guessed == 4: self.guessed_table['guessed_four'][inpt] += 1
-        if guessed == 5: self.guessed_table['guessed_five'][inpt] += 1
-        if guessed == 6: self.guessed_table['guessed_six'][inpt] += 1
+        self.guessed_table[guessed][inpt] += 1
 
         # putting data data into numbers chart
         for number in self.drawn_numbers:
