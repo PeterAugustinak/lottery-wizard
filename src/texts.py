@@ -1,22 +1,35 @@
 # coding=utf-8
 
 texts = {
-    'intro1':
+    'intro1-1':
         [
-            'Please input your 6 numbers from 1 to 49 and press ENTER.',
-            'Prosím zadaj 6 čísel od 1 do 49 a stlač ENTER.'],
-    'intro2':
+            'Please input your ',
+            'Prosím zadaj '],
+    'intro1-2':
         [
-            ' (example: 2 7 13 28 29 32 46)',
-            ' (príklad: 2 7 13 28 29 32 46)'],
+            ' numbers from 1 to ',
+            ' čísel od 1 do '],
+    'intro1-3':
+        [
+            ' and press ENTER.',
+            ' a stlač ENTER.'],
+
+    'intro1-4':
+        [
+            ' (example: ',
+            ' (príklad: '],
     'val_error_int':
         [
             'Please enter valid numbers with one space between.',
             'Prosím zadaj číselné znaky s jednou medzerou medzi každým.'],
+    'val_error_int2':
+        [
+            'Please enter valid numbers.',
+            'Prosím zadaj číselné znaky.'],
     'val_error_count':
         [
-            'Please enter that many numbers as are valid for draw.',
-            'Prosím zadaj presne toľko čísel, koľko je potrebné pre losovanie.'],
+            'Please enter that many numbers and in that range as is valid for draw.',
+            'Prosím zadaj presne toľko čísel a v takom rozmedzí, ako je potrebné pre losovanie.'],
     'val_error_range':
         [
             'Please enter the number in range specified.',
@@ -72,8 +85,8 @@ texts = {
         ['and drawn numbers was',
          'a vylosované čísla boli'],
     'tab_title_chart':
-        ['TOP 6 MOST VS LESS DRAWN NUMBERS',
-         'TOP 6 NAJVIAC VS NAJMENEJ ŤAHANÉ ČÍSLA'],
+        [' MOST VS LESS DRAWN NUMBERS',
+         ' NAJVIAC VS NAJMENEJ ŤAHANÉ ČÍSLA'],
     'chart_top_nm':
         ['Number ↑',
          'Číslo ↑'],
