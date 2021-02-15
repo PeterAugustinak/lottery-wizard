@@ -18,6 +18,7 @@ class Lottery:
     lang = None
     # counter for user input (in case of incorrect input only
     user_no_or_incorrect_input = True
+    lottery_pool = None
     # numbers for lottery
     defined_numbers_for_draw = []
     random_numbers_for_draw = []
@@ -123,6 +124,7 @@ class Lottery:
         try:
             pool = int(user_input)
             if pool >= 35 or pool <= 100:
+                self.lottery_pool = pool
                 self.set_numbers_chart(pool)
                 self.user_no_or_incorrect_input = False
             else:
@@ -154,10 +156,9 @@ class Lottery:
 
         self.lottery_won()
 
-    @staticmethod
-    def random_numbers():
+    def random_numbers(self):
         """Picks 6 random numbers instead of the user"""
-        return [random.randrange(1, 50) for _ in range(6)]
+        return [random.randrange(1, self.lottery_pool + 1) for _ in range(6)]
 
     def evaluate_round(self, numbers_for_draw, inpt):
         """
