@@ -15,26 +15,25 @@ from itertools import islice
 
 class Lottery:
     """Lottery class"""
-    lang = None
-    # counter for user input (in case of incorrect input only
-    user_no_or_incorrect_input = True
-    lottery_pool = None
-    numbers_to_draw = None
-    # numbers for lottery
-    defined_numbers_for_draw = []
-    random_numbers_for_draw = []
-    drawn_numbers = []
-    # counter of lottery tosses
-    draw_counter = 1
-    # date
-    current_date = None
-    draws_per_week = None
-    # dicts to store current situation after every draw
-    guessed_table = {}
-    numbers_chart = {}
 
     def __init__(self):
-        pass
+        self.lang = None
+        # counter for user input (in case of incorrect input only
+        self.user_no_or_incorrect_input = True
+        self.lottery_pool = None
+        self.numbers_to_draw = None
+        # dicts to store current situation after every draw
+        self.guessed_table = {}
+        self.numbers_chart = {}
+        # numbers for lottery
+        self.defined_numbers_for_draw = []
+        self.random_numbers_for_draw = []
+        self.drawn_numbers = []
+        # counter of lottery tosses
+        self.draw_counter = 0
+        # date
+        self.current_date = None
+        self.draws_per_week = None
 
     # USER INPUTS HANDLING BEFORE LOTTERY CAN START ###
     def language_input(self):
@@ -171,6 +170,7 @@ class Lottery:
         """This will toss lottery"""
         guessed_all = self.guessed_table[self.numbers_to_draw]
         while guessed_all[0] == 0 and guessed_all[1] == 0:
+            self.draw_counter += 1
             self.random_numbers_for_draw = sorted(self.random_numbers())
             self.drawn_numbers = sorted(self.random_numbers())
             self.evaluate_round(self.defined_numbers_for_draw, 0)
@@ -178,7 +178,6 @@ class Lottery:
 
             system('cls')
             self.print_results()
-            self.draw_counter += 1
 
         self.lottery_won()
 
