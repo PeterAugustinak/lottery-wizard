@@ -34,6 +34,10 @@ texts = {
         [
             'Please enter the number in range specified.',
             'Prosím zadaj číslo v špecifikovanom rozmedzí.'],
+    'note':
+        [
+            "Note: Y = your numbers, R = random numbers",
+            "Pozn.: T = tvoje čísla, N = náhodné čísla"],
     'tab_title_stat':
         ['COUNT OF GUESSED NUMBERS IN EVERY DRAW STATS',
          'ŠTATISTIKA POČTU UHÁDNUTÝCH ČÍSEL PRE KAŽDÝ ŤAH'],
@@ -42,17 +46,23 @@ texts = {
             "Guessed",
             "Uhádnutých"],
     'table_f2':
-        ["Times (yours)",
-         "Počet krát (tvoje)"],
+        ["Times (Y)",
+         "Počet krát (T)"],
     'table_f3':
-        ["Success % (yours)",
-         "Úspešnosť % (tvoje)"],
+        ["1.time in draw (Y)",
+         "1.krát v ťahu (T)"],
     'table_f4':
-        ["Times (rand.)",
-         "Počet krát (náh.)"],
+        ["Success % (Y)",
+         "Úspešnosť % (T)"],
     'table_f5':
-        ["Success % (rand.)",
-         "Úspešnosť % (náh.)"],
+        ["Times (R)",
+         "Počet krát (N)"],
+    'table_f6':
+        ["1.time in draw (R)",
+         "1.krát v ťahu (N)"],
+    'table_f7':
+        ["Success % (R)",
+         "Úspešnosť % (N)"],
     'num':
         ["numbers",
          "čísel"],

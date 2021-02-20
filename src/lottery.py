@@ -163,13 +163,14 @@ class Lottery:
         """This will set disctionary to store how much time the particular nnumber was guessed based on amount of
         numbers to draw"""
         for number in range(0, self.numbers_to_draw + 1):
-            self.guessed_table.update({number: [0, 0]})
+            # {numbers guessed in round: ([user def nums, first guess in draw], [random nums, first guessed in draw)]
+            self.guessed_table.update({number: ([0, 0], [0, 0])})
 
     # START OF LOTTERY DRAWINGS ... ###
     def start_lottery(self):
         """This will toss lottery"""
         guessed_all = self.guessed_table[self.numbers_to_draw]
-        while guessed_all[0] == 0 and guessed_all[1] == 0:
+        while guessed_all[0][0] == 0 and guessed_all[1][0] == 0:
             self.draw_counter += 1
             self.random_numbers_for_draw = sorted(self.random_numbers())
             self.drawn_numbers = sorted(self.random_numbers())
@@ -193,7 +194,14 @@ class Lottery:
         Also it creates number chart
         """
         guessed = len(set(numbers_for_draw).intersection(self.drawn_numbers))
-        self.guessed_table[guessed][inpt] += 1
+        self.guessed_table[guessed][inpt][0] += 1
+
+        # check if this number of guessed numbers is first time
+        if self.guessed_table[guessed][inpt][1] > 0:
+            pass
+        # if yes, put draw # too to know in what draw happend first succes
+        else:
+            self.guessed_table[guessed][inpt][1] = self.draw_counter
 
         # putting data data into numbers chart
         for number in self.drawn_numbers:
@@ -206,6 +214,7 @@ class Lottery:
         print()
         print(self.create_table_draw())
         print()
+        print(texts['note'][self.lang])
         print(self.create_table_stat())
         print()
         print(self.create_table_chart())
@@ -264,13 +273,18 @@ class Lottery:
                                   texts['table_f2'][self.lang],
                                   texts['table_f3'][self.lang],
                                   texts['table_f4'][self.lang],
-                                  texts['table_f5'][self.lang]]
+                                  texts['table_f5'][self.lang],
+                                  texts['table_f6'][self.lang],
+                                  texts['table_f7'][self.lang]
+                                  ]
 
         table_stat.align[texts['table_f1'][self.lang]] = "l"
         table_stat.align[texts['table_f2'][self.lang]] = "r"
         table_stat.align[texts['table_f3'][self.lang]] = "r"
         table_stat.align[texts['table_f4'][self.lang]] = "r"
         table_stat.align[texts['table_f5'][self.lang]] = "r"
+        table_stat.align[texts['table_f6'][self.lang]] = "r"
+        table_stat.align[texts['table_f7'][self.lang]] = "r"
 
         for i, key in zip(range(len(self.guessed_table)), self.guessed_table.keys()):
             if i == 0:
@@ -280,13 +294,16 @@ class Lottery:
             else:
                 nm = 'numss'
 
+            guess_num = self.guessed_table[key]
             table_stat.add_row(
                 [
                     f"{i} {texts[nm][self.lang]}",
-                    self.guessed_table[key][0],
-                    self.count_percentage(self.guessed_table[key][0]),
-                    self.guessed_table[key][1],
-                    self.count_percentage(self.guessed_table[key][1]),
+                    guess_num[0][0],
+                    f"#{guess_num[0][1] if guess_num[0][1] > 0 else '-'}",
+                    self.count_percentage(guess_num[0][0]),
+                    guess_num[1][0],
+                    f"#{guess_num[1][1] if guess_num[1][1] > 0 else '-'}",
+                    self.count_percentage(self.guessed_table[key][1][0]),
                 ]
              )
 
