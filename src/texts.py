@@ -1,6 +1,18 @@
 # coding=utf-8
 
 texts = {
+    'welcome1':
+        [
+            'WELCOME TO LOTTERY MADNESS',
+            'VITAJ V LOTTERY MADNESS'],
+    'welcome2':
+        [
+            'The win predictor!',
+            'Predpovedač výhry!'],
+    'welcome3':
+        [
+            'Author: PA, Ver: ',
+            'Autor: PA, Ver: '],
     'intro1-1':
         [
             'Please input your ',

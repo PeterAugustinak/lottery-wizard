@@ -7,7 +7,6 @@ from texts import texts
 import random
 from os import system
 from datetime import datetime, timedelta
-import msvcrt
 # external library imports
 from prettytable import PrettyTable
 from itertools import islice
@@ -36,25 +35,6 @@ class Lottery:
         self.draws_per_week = None
 
     # USER INPUTS HANDLING BEFORE LOTTERY CAN START ###
-    def language_input(self):
-        """User will at first select language for the Lottery app"""
-        system('cls')
-        print("1. ENG\n"
-              "2. SVK\n")
-
-        lang_input = msvcrt.getch()
-        # 0 = English, 1 = Slovak
-        try:
-            if int(lang_input) != 2:
-                self.lang = 0
-            else:
-                self.lang = 1
-        except ValueError:
-            self.lang = 0
-
-        system('cls')
-        self.user_inputs()
-
     def user_inputs(self):
         """This clarifies if user want to use his own numbers or just leave it for random AI choices"""
         # ask user from how many numbers is in lottery
@@ -184,7 +164,7 @@ class Lottery:
 
     def random_numbers(self):
         """Picks 6 random numbers instead of the user"""
-        return [random.randrange(1, self.lottery_pool + 1) for _ in range(self.numbers_to_draw)]
+        return random.sample(range(1, self.lottery_pool + 1), self.numbers_to_draw)
 
     def evaluate_round(self, numbers_for_draw, inpt):
         """
@@ -365,6 +345,3 @@ class Lottery:
     def count_years(self):
         """This counts the time evaluated to win"""
         return round(self.draw_counter / 52, 0)
-
-
-Lottery().language_input()
