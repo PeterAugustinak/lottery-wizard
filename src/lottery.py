@@ -38,28 +38,28 @@ class Lottery:
     def user_inputs(self):
         """This clarifies if user want to use his own numbers or just leave it for random AI choices"""
         # ask user from how many numbers is in lottery
-        self.input_lottery_pool_text()
+        print(self.input_lottery_pool_text())
         while self.user_no_or_incorrect_input:
             user_lottery_pool_input = input("-> ")
             self.validate_lottery_pool_input(user_lottery_pool_input)
 
         self.user_no_or_incorrect_input = True
         # ask user how many numbers is going to be drawn
-        self.input_amount_of_draw_numbers_text()
+        print(self.input_amount_of_draw_numbers_text())
         while self.user_no_or_incorrect_input:
             user_amount_of_draw_numbers_input = input("-> ")
             self.validate_amount_of_draw_numbers(user_amount_of_draw_numbers_input)
 
         self.user_no_or_incorrect_input = True
         # ask user for input numbers till the format of input is correct
-        self.input_draw_numbers_text()
+        print(self.input_draw_numbers_text())
         while self.user_no_or_incorrect_input:
             user_numbers_input = input("-> ")
             self.parse_and_validate_draw_numbers_input(user_numbers_input)
 
         self.user_no_or_incorrect_input = True
         # ask user for input draws per week value till the format is correct
-        self.input_draws_per_week_text()
+        print(self.input_draws_per_week_text())
         while self.user_no_or_incorrect_input:
             user_draw_per_week_input = input("-> ")
             self.validate_draws_per_week_input(user_draw_per_week_input)
@@ -68,21 +68,22 @@ class Lottery:
 
     def input_lottery_pool_text(self):
         """Prints text explaining how to input lottery pool nummbers"""
-        print(f"{texts['text_pool_input1'][self.lang]}\n{texts['text_pool_input2'][self.lang]}")
+        return f"{texts['text_pool_input1'][self.lang]}\n{texts['text_pool_input2'][self.lang]}"
 
     def input_amount_of_draw_numbers_text(self):
         """Print text explaining how to input amount of numbers to be drawn"""
-        print(f"{texts['input_amount_of_draw1'][self.lang]}\n{texts['input_amount_of_draw2'][self.lang]}")
+        return f"{texts['input_amount_of_draw1'][self.lang]}\n{texts['input_amount_of_draw2'][self.lang]}"
 
     def input_draw_numbers_text(self):
         """Prints text explaining how to input numbers for draw"""
-        print(f"{texts['intro1-1'][self.lang]}{self.numbers_to_draw}{texts['intro1-2'][self.lang]}"
-              f"{self.lottery_pool}{texts['intro1-3'][self.lang]}")
-        print(f"{texts['intro1-4'][self.lang]}{' '.join(map(str, sorted(self.random_numbers())))})")
+        text = f"{texts['intro1-1'][self.lang]}{self.numbers_to_draw}{texts['intro1-2'][self.lang]}" \
+               f"{self.lottery_pool}{texts['intro1-3'][self.lang]}\n" \
+               f"{texts['intro1-4'][self.lang]}{' '.join(map(str, sorted(self.random_numbers())))})"
+        return text
 
     def input_draws_per_week_text(self):
         """Prints text explaining how to input draws per week"""
-        print(f"{texts['text_draws_per_input1'][self.lang]}\n{texts['text_draws_per_input2'][self.lang]}")
+        return f"{texts['text_draws_per_input1'][self.lang]}\n{texts['text_draws_per_input2'][self.lang]}"
 
     def validate_lottery_pool_input(self, user_input):
         """This validates user defined numbers in lottery pool"""
