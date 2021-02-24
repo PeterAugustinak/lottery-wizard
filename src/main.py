@@ -13,22 +13,21 @@ from prettytable import PrettyTable
 
 def main():
     """Main function"""
-    lottery = Lottery()
 
     """User will at first select language for the Lottery app"""
     system('cls')
-    print("1. ENG\n"
-          "2. SVK\n")
+    print("1. EN\n"
+          "2. SK\n")
 
     lang_input = msvcrt.getch()
     # 0 = English, 1 = Slovak
     try:
         if int(lang_input) != 2:
-            lottery.lang = 0
+            lottery = Lottery(0)
         else:
-            lottery.lang = 1
+            lottery = Lottery(1)
     except ValueError:
-        lottery.lang = 0
+        lottery = Lottery(0)
 
     system('cls')
     welcome_table(lottery.lang)

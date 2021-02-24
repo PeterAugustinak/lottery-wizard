@@ -15,10 +15,10 @@ from itertools import islice
 class Lottery:
     """Lottery class"""
 
-    def __init__(self):
-        self.lang = None
+    def __init__(self, language):
+        self.lang = language
         # counter for user input (in case of incorrect input only
-        self.user_no_or_incorrect_input = True
+        self.user_has_no_or_incorrect_answer = True
         self.lottery_pool = None
         self.numbers_to_draw = None
         # dicts to store current situation after every draw
@@ -37,53 +37,52 @@ class Lottery:
     # USER INPUTS HANDLING BEFORE LOTTERY CAN START ###
     def user_inputs(self):
         """This clarifies if user want to use his own numbers or just leave it for random AI choices"""
-        # ask user from how many numbers is in lottery
-        print(self.input_lottery_pool_text())
-        while self.user_no_or_incorrect_input:
-            user_lottery_pool_input = input("-> ")
-            self.validate_lottery_pool_input(user_lottery_pool_input)
+        # how many numbers will have lottery
+        self.print_input_text_lottery_pool()
+        while self.user_has_no_or_incorrect_answer:
+            self.validate_lottery_pool_input(input("-> "))
 
-        self.user_no_or_incorrect_input = True
-        # ask user how many numbers is going to be drawn
-        print(self.input_amount_of_draw_numbers_text())
-        while self.user_no_or_incorrect_input:
+        self.user_has_no_or_incorrect_answer = True
+        # how many numbers is going to be drawn
+        self.print_input_text_amount_of_draw_numbers()
+        while self.user_has_no_or_incorrect_answer:
             user_amount_of_draw_numbers_input = input("-> ")
             self.validate_amount_of_draw_numbers(user_amount_of_draw_numbers_input)
 
-        self.user_no_or_incorrect_input = True
-        # ask user for input numbers till the format of input is correct
-        print(self.input_draw_numbers_text())
-        while self.user_no_or_incorrect_input:
+        self.user_has_no_or_incorrect_answer = True
+        # define user numbers for draw
+        self.print_input_text_define_numbers()
+        while self.user_has_no_or_incorrect_answer:
             user_numbers_input = input("-> ")
             self.parse_and_validate_draw_numbers_input(user_numbers_input)
 
-        self.user_no_or_incorrect_input = True
+        self.user_has_no_or_incorrect_answer = True
         # ask user for input draws per week value till the format is correct
-        print(self.input_draws_per_week_text())
-        while self.user_no_or_incorrect_input:
+        self.print_input_text_draws_per_week()
+        while self.user_has_no_or_incorrect_answer:
             user_draw_per_week_input = input("-> ")
             self.validate_draws_per_week_input(user_draw_per_week_input)
 
         self.start_lottery()
 
-    def input_lottery_pool_text(self):
+    def print_input_text_lottery_pool(self):
         """Prints text explaining how to input lottery pool nummbers"""
-        return f"{texts['text_pool_input1'][self.lang]}\n{texts['text_pool_input2'][self.lang]}"
+        print(f"{texts['text_pool_input1'][self.lang]}\n{texts['text_pool_input2'][self.lang]}")
 
-    def input_amount_of_draw_numbers_text(self):
+    def print_input_text_amount_of_draw_numbers(self):
         """Print text explaining how to input amount of numbers to be drawn"""
-        return f"{texts['input_amount_of_draw1'][self.lang]}\n{texts['input_amount_of_draw2'][self.lang]}"
+        print(f"{texts['input_amount_of_draw1'][self.lang]}\n{texts['input_amount_of_draw2'][self.lang]}")
 
-    def input_draw_numbers_text(self):
+    def print_input_text_define_numbers(self):
         """Prints text explaining how to input numbers for draw"""
         text = f"{texts['intro1-1'][self.lang]}{self.numbers_to_draw}{texts['intro1-2'][self.lang]}" \
                f"{self.lottery_pool}{texts['intro1-3'][self.lang]}\n" \
                f"{texts['intro1-4'][self.lang]}{' '.join(map(str, sorted(self.random_numbers())))})"
-        return text
+        print(text)
 
-    def input_draws_per_week_text(self):
+    def print_input_text_draws_per_week(self):
         """Prints text explaining how to input draws per week"""
-        return f"{texts['text_draws_per_input1'][self.lang]}\n{texts['text_draws_per_input2'][self.lang]}"
+        print(f"{texts['text_draws_per_input1'][self.lang]}\n{texts['text_draws_per_input2'][self.lang]}")
 
     def validate_lottery_pool_input(self, user_input):
         """This validates user defined numbers in lottery pool"""
@@ -92,7 +91,7 @@ class Lottery:
             if 35 <= pool <= 100:
                 self.lottery_pool = pool
                 self.set_numbers_chart()
-                self.user_no_or_incorrect_input = False
+                self.user_has_no_or_incorrect_answer = False
             else:
                 self.failed_validation('val_error_range')
         except ValueError:
@@ -105,7 +104,7 @@ class Lottery:
             if 1 <= numbers_to_draw <= 10:
                 self.numbers_to_draw = numbers_to_draw
                 self.set_guessed_table()
-                self.user_no_or_incorrect_input = False
+                self.user_has_no_or_incorrect_answer = False
             else:
                 self.failed_validation('val_error_range')
         except ValueError:
@@ -117,7 +116,7 @@ class Lottery:
             numbers = [int(element) for element in user_input.split() if int(element) in range(1, self.lottery_pool + 1)]
             if len(numbers) == self.numbers_to_draw:
                 self.defined_numbers_for_draw = sorted(numbers)
-                self.user_no_or_incorrect_input = False
+                self.user_has_no_or_incorrect_answer = False
             else:
                 self.failed_validation('val_error_count')
         except ValueError:
@@ -127,7 +126,7 @@ class Lottery:
         """This validates user defined draws per week input"""
         try:
             self.draws_per_week = int(user_input)
-            self.user_no_or_incorrect_input = False
+            self.user_has_no_or_incorrect_answer = False
         except ValueError:
             self.failed_validation('val_error_int')
 
@@ -346,3 +345,4 @@ class Lottery:
     def count_years(self):
         """This counts the time evaluated to win"""
         return round(self.draw_counter / 52, 0)
+
