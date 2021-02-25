@@ -70,19 +70,7 @@ class LottreyTest(unittest.TestCase):
         assert mock_stdout.getvalue() == f'{expected}\n'
 
     # VALIDATIONS
-    def test_validate_lottery_pool_input(self):
-        # range error left
-        self.lottery_en.parse_lottery_pool_input('34')
-        self.assertTrue(self.lottery_en.get_user_has_no_or_incorrect_answer())
-
-        # range error right
-        self.lottery_sk.parse_lottery_pool_input('101')
-        self.assertTrue(self.lottery_sk.get_user_has_no_or_incorrect_answer())
-
-        # range error negative
-        self.lottery_en.parse_lottery_pool_input('-45')
-        self.assertTrue(self.lottery_en.get_user_has_no_or_incorrect_answer())
-
+    def test_parse_lottery_pool_input(self):
         # value error - char
         self.lottery_sk.parse_lottery_pool_input('erf')
         self.assertTrue(self.lottery_sk.get_user_has_no_or_incorrect_answer())
@@ -91,16 +79,41 @@ class LottreyTest(unittest.TestCase):
         self.lottery_sk.parse_lottery_pool_input('')
         self.assertTrue(self.lottery_sk.get_user_has_no_or_incorrect_answer())
 
-        # correct middle
+        # value error - more numbers
+        self.lottery_sk.parse_lottery_pool_input('45 48')
+        self.assertTrue(self.lottery_sk.get_user_has_no_or_incorrect_answer())
+
+        # correct
         self.lottery_sk.parse_lottery_pool_input('45')
         self.assertFalse(self.lottery_sk.get_user_has_no_or_incorrect_answer())
 
+    def test_validate_lottery_pool_input(self):
+        # range error left
+        self.lottery_en.validate_lottery_pool_input(34)
+        self.assertTrue(self.lottery_en.get_user_has_no_or_incorrect_answer())
+
+        # range error right
+        self.lottery_sk.validate_lottery_pool_input(101)
+        self.assertTrue(self.lottery_sk.get_user_has_no_or_incorrect_answer())
+
+        # range error negative
+        self.lottery_en.validate_lottery_pool_input(-45)
+        self.assertTrue(self.lottery_en.get_user_has_no_or_incorrect_answer())
+
+        # range error zero
+        self.lottery_en.validate_lottery_pool_input(0)
+        self.assertTrue(self.lottery_en.get_user_has_no_or_incorrect_answer())
+
+        # correct middle
+        self.lottery_sk.validate_lottery_pool_input(45)
+        self.assertFalse(self.lottery_sk.get_user_has_no_or_incorrect_answer())
+
         # correct boundary left
-        self.lottery_en.parse_lottery_pool_input('35')
+        self.lottery_en.validate_lottery_pool_input(35)
         self.assertFalse(self.lottery_en.get_user_has_no_or_incorrect_answer())
 
         # correct boundary right
-        self.lottery_sk.parse_lottery_pool_input('100')
+        self.lottery_sk.validate_lottery_pool_input(100)
         self.assertFalse(self.lottery_sk.get_user_has_no_or_incorrect_answer())
 
     def test_validate_amount_of_draw_numbers(self):
