@@ -23,7 +23,6 @@ class LottreyTest(unittest.TestCase):
 
     @patch('sys.stdout', new_callable=io.StringIO)
     def test_input_lottery_pool_text_en(self, mock_stdout):
-        # EN
         expected = "How many numbers are in the pool for lottery? (35-100)\n" \
                    " (example: 49)"
         self.lottery_en.print_input_text_lottery_pool()
@@ -70,6 +69,58 @@ class LottreyTest(unittest.TestCase):
         self.lottery_sk.print_input_text_draws_per_week()
         assert mock_stdout.getvalue() == f'{expected}\n'
 
+    # VALIDATIONS
+    def test_validate_lottery_pool_input(self):
+        # range error left
+        self.lottery_en.validate_lottery_pool_input('34')
+        self.assertTrue(self.lottery_en.get_user_has_no_or_incorrect_answer())
 
+        # range error right
+        self.lottery_sk.validate_lottery_pool_input('101')
+        self.assertTrue(self.lottery_sk.get_user_has_no_or_incorrect_answer())
 
+        # range error negative
+        self.lottery_en.validate_lottery_pool_input('-45')
+        self.assertTrue(self.lottery_en.get_user_has_no_or_incorrect_answer())
+
+        # value error - char
+        self.lottery_sk.validate_lottery_pool_input('erf')
+        self.assertTrue(self.lottery_sk.get_user_has_no_or_incorrect_answer())
+
+        # value error - no char
+        self.lottery_sk.validate_lottery_pool_input('')
+        self.assertTrue(self.lottery_sk.get_user_has_no_or_incorrect_answer())
+
+        # correct middle
+        self.lottery_sk.validate_lottery_pool_input('45')
+        self.assertFalse(self.lottery_sk.get_user_has_no_or_incorrect_answer())
+
+        # correct boundary left
+        self.lottery_en.validate_lottery_pool_input('35')
+        self.assertFalse(self.lottery_en.get_user_has_no_or_incorrect_answer())
+
+        # correct boundary right
+        self.lottery_sk.validate_lottery_pool_input('100')
+        self.assertFalse(self.lottery_sk.get_user_has_no_or_incorrect_answer())
+
+    def test_validate_amount_of_draw_numbers(self):
+        pass
+
+    def test_parse_draw_numbers_input(self):
+        pass
+
+    def test_validate_draw_numbers_input(self):
+        pass
+
+    def test_validate_draws_per_week_input(self):
+        pass
+
+    def test_failed_validation(self):
+        pass
+
+    def test_set_numbers_chart(self):
+        pass
+
+    def test_set_guessed_table(self):
+        pass
 

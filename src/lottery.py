@@ -34,6 +34,10 @@ class Lottery:
         self._current_date = None
         self._draws_per_week = None
 
+    def get_user_has_no_or_incorrect_answer(self):
+        """For testing purposes"""
+        return self._user_has_no_or_incorrect_answer
+
     # USER INPUTS HANDLING BEFORE LOTTERY CAN START ###
     def user_inputs(self):
         """This clarifies if user want to use his own numbers or just leave it for random AI choices"""
@@ -46,22 +50,19 @@ class Lottery:
         # how many numbers is going to be drawn
         self.print_input_text_amount_of_draw_numbers()
         while self._user_has_no_or_incorrect_answer:
-            user_amount_of_draw_numbers_input = input("-> ")
-            self.validate_amount_of_draw_numbers(user_amount_of_draw_numbers_input)
+            self.validate_amount_of_draw_numbers(input("-> "))
 
         self._user_has_no_or_incorrect_answer = True
         # define user numbers for draw
         self.print_input_text_define_numbers()
         while self._user_has_no_or_incorrect_answer:
-            user_numbers_input = input("-> ")
-            self.parse_and_validate_draw_numbers_input(user_numbers_input)
+            self.parse_draw_numbers_input(input("-> "))
 
         self._user_has_no_or_incorrect_answer = True
         # ask user for input draws per week value till the format is correct
         self.print_input_text_draws_per_week()
         while self._user_has_no_or_incorrect_answer:
-            user_draw_per_week_input = input("-> ")
-            self.validate_draws_per_week_input(user_draw_per_week_input)
+            self.validate_draws_per_week_input(input("-> "))
 
         self.start_lottery()
 
@@ -110,17 +111,21 @@ class Lottery:
         except ValueError:
             self.failed_validation('val_error_int2')
 
-    def parse_and_validate_draw_numbers_input(self, user_input):
-        """This will parse and validate user input. If the input is incorrect, back to initial question"""
+    def parse_draw_numbers_input(self, user_input):
+        """Parses user input for draw numbers"""
         try:
             numbers = [int(element) for element in user_input.split() if int(element) in range(1, self._lottery_pool + 1)]
-            if len(numbers) == self._numbers_to_draw:
-                self._defined_numbers_for_draw = sorted(numbers)
-                self._user_has_no_or_incorrect_answer = False
-            else:
-                self.failed_validation('val_error_count')
+            self.validate_draw_numbers_input(numbers)
         except ValueError:
             self.failed_validation('val_error_int')
+
+    def validate_draw_numbers_input(self, numbers):
+        """Validates draw numbers input after parsing input"""
+        if len(numbers) == self._numbers_to_draw:
+            self._defined_numbers_for_draw = sorted(numbers)
+            self._user_has_no_or_incorrect_answer = False
+        else:
+            self.failed_validation('val_error_count')
 
     def validate_draws_per_week_input(self, user_input):
         """This validates user defined draws per week input"""
@@ -132,6 +137,7 @@ class Lottery:
 
     def failed_validation(self, val_error):
         """This prints the reason of incorrect validation and starts user input again"""
+        self._user_has_no_or_incorrect_answer = True
         print(f" {texts[val_error][self.lang]}")
 
     def set_numbers_chart(self):
