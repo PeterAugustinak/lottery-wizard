@@ -2,14 +2,12 @@
 """LotteryEngine Class"""
 
 # local library import
+from lottery_cmd_output import LotteryCmdOutput
 from texts import texts
 from common import pick_random_numbers
 # standard library imports
 from os import system
 from datetime import datetime, timedelta
-# external library imports
-from prettytable import PrettyTable
-from itertools import islice
 
 
 class LotteryEngine:
@@ -32,6 +30,8 @@ class LotteryEngine:
         # date
         self._current_date = None
         self._draws_per_week = None
+        # initialize object for building tables for cmd output
+        self.cmd_output = LotteryCmdOutput(language)
 
     # TABLES SETTERS
     def set_guessed_table(self):
@@ -60,7 +60,7 @@ class LotteryEngine:
             self.evaluate_round(self._random_numbers_for_draw, 1)
 
             system('cls')
-            self.print_results()
+            self.print_cmd_output()
 
         self.lottery_won()
 
@@ -69,7 +69,7 @@ class LotteryEngine:
         This will compare numbers for draw against drawn numbers for the round
         inpt: 0 -> user defined draw numbers
         inpt: 1 -> random defined draw numbers
-        Also it creates number chart
+        Also it shows online output
         """
         guessed = len(set(numbers_for_draw).intersection(self._drawn_numbers))
         self._guessed_table[guessed][inpt][0] += 1
@@ -85,131 +85,21 @@ class LotteryEngine:
         for number in self._drawn_numbers:
             self._numbers_chart[number] += 1
 
-    def print_results(self):
+    def print_cmd_output(self):
         """This prints current results"""
 
-        print(self.create_table_input())
+        print(self.cmd_output.create_table_input(self.user_defined_numbers,
+                                                 self._random_numbers_for_draw,
+                                                 self.draws_per_week, ))
         print()
-        print(self.create_table_draw())
+        print(self.cmd_output.create_table_draw(self.count_date(),
+                                                self._draw_counter,
+                                                self._drawn_numbers))
         print()
         print(texts['note'][self.lang])
-        print(self.create_table_stat())
+        print(self.cmd_output.create_table_stat(self._guessed_table))
         print()
-        print(self.create_table_chart())
-
-    def create_table_input(self):
-        """Builds table for input information"""
-
-        table_input = PrettyTable(header=False)
-
-        table_input.add_rows([
-            [
-                texts['your_nums'][self.lang].upper(),
-                f"{' '.join(map(str, self.user_defined_numbers))}        "
-            ],
-            [
-                texts['random_nums'][self.lang].upper(),
-                ' '.join(map(str, self._random_numbers_for_draw))
-            ],
-            [
-                texts['draws_p_w'][self.lang].upper(),
-                self._draws_per_week
-            ],
-        ])
-
-        table_input.align = "l"
-        return table_input
-
-    def create_table_draw(self):
-        """Builds table for drawing information"""
-
-        table_draw = PrettyTable(header=False)
-
-        table_draw.add_rows([
-            [
-                texts['date'][self.lang].upper(),
-                self.count_date()
-            ],
-            [
-                texts['draw'][self.lang],
-                f"{self._draw_counter:,}                         "
-            ],
-            [
-                texts['drawn_nums'][self.lang].upper(),
-                ' '.join(map(str, self._drawn_numbers))]]
-        )
-
-        table_draw.align = "l"
-        return table_draw
-
-    def create_table_stat(self):
-        """Builds table for drawing stats"""
-        table_stat = PrettyTable()
-        table_stat.title = texts['tab_title_stat'][self.lang]
-
-        table_stat.field_names = [texts['table_f1'][self.lang],
-                                  texts['table_f2'][self.lang],
-                                  texts['table_f3'][self.lang],
-                                  texts['table_f4'][self.lang],
-                                  texts['table_f5'][self.lang],
-                                  texts['table_f6'][self.lang],
-                                  texts['table_f7'][self.lang]
-                                  ]
-
-        table_stat.align[texts['table_f1'][self.lang]] = "l"
-        table_stat.align[texts['table_f2'][self.lang]] = "r"
-        table_stat.align[texts['table_f3'][self.lang]] = "r"
-        table_stat.align[texts['table_f4'][self.lang]] = "r"
-        table_stat.align[texts['table_f5'][self.lang]] = "r"
-        table_stat.align[texts['table_f6'][self.lang]] = "r"
-        table_stat.align[texts['table_f7'][self.lang]] = "r"
-
-        for i, key in zip(range(len(self._guessed_table)), self._guessed_table.keys()):
-            if i == 0:
-                nm = 'num'
-            elif i == 1:
-                nm = 'nums'
-            else:
-                nm = 'numss'
-
-            guess_num = self._guessed_table[key]
-            table_stat.add_row(
-                [
-                    f"{i} {texts[nm][self.lang]}",
-                    guess_num[0][0],
-                    f"#{guess_num[0][1] if guess_num[0][1] > 0 else '-'}",
-                    self.count_percentage(guess_num[0][0]),
-                    guess_num[1][0],
-                    f"#{guess_num[1][1] if guess_num[1][1] > 0 else '-'}",
-                    self.count_percentage(self._guessed_table[key][1][0]),
-                ]
-             )
-
-        return table_stat
-
-    def create_table_chart(self):
-        """This creates table with numbers chart"""
-        table_chart = PrettyTable()
-
-        table_chart.title = f"TOP {self.amount_of_draw_numbers}{texts['tab_title_chart'][self.lang]}"
-        table_chart.field_names = [texts['chart_top_nm'][self.lang],
-                                   texts['chart_top_val'][self.lang],
-                                   texts['chart_down_nm'][self.lang],
-                                   texts['chart_down_val'][self.lang]]
-
-        table_chart.align[texts['chart_top_val'][self.lang]] = "r"
-        table_chart.align[texts['chart_down_val'][self.lang]] = "r"
-
-        sorted_chart_top = dict(sorted(self._numbers_chart.items(), key=lambda item: item[1], reverse=True))
-        sorted_chart_down = dict(sorted(self._numbers_chart.items(), key=lambda item: item[1]))
-
-        top = list(islice(sorted_chart_top.items(), 0, self.amount_of_draw_numbers))
-        down = list(islice(sorted_chart_down.items(), 0, self.amount_of_draw_numbers))
-
-        for n_top, n_down in zip(top, down[::-1]):
-            table_chart.add_row([n_top[0], n_top[1], n_down[0], n_down[1]])
-
-        return table_chart
+        print(self.cmd_output.create_table_chart(self.amount_of_draw_numbers, self._numbers_chart))
 
     def count_date(self):
         """Counts passing the time by weeks"""
@@ -227,10 +117,6 @@ class LotteryEngine:
 
         self._current_date = next_date
         return f"{week}/{year}"
-
-    def count_percentage(self, correct_guesses):
-        """This counts percentage value of how many guess of the particular number of total draw was success"""
-        return round(100 / self._draw_counter * correct_guesses, 3)
 
     def lottery_won(self):
         """In case of 6 numbers of 6 was guessed correctly - means lottery is won, the tossing will stop"""
