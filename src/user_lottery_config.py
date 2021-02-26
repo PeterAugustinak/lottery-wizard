@@ -58,7 +58,7 @@ class UserLotteryConfig:
         random_numbers = pick_random_numbers(self.lottery_pool, self.amount_of_draw_numbers)
         text = f"{texts['intro1-1'][self.lang]}{self.amount_of_draw_numbers}{texts['intro1-2'][self.lang]}" \
                f"{self.lottery_pool}{texts['intro1-3'][self.lang]}\n" \
-               f"{texts['intro1-4'][self.lang]}{' '.join(map(str, sorted(random_numbers())))})"
+               f"{texts['intro1-4'][self.lang]}{' '.join(map(str, sorted(random_numbers)))})"
         print(text)
 
     def print_input_text_draws_per_week(self):

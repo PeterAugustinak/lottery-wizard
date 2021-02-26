@@ -97,9 +97,11 @@ class LotteryEngine:
                                                 self._drawn_numbers))
         print()
         print(texts['note'][self.lang])
-        print(self.cmd_output.create_table_stat(self._guessed_table))
+        print(self.cmd_output.create_table_stat(self._guessed_table,
+                                                self._draw_counter))
         print()
-        print(self.cmd_output.create_table_chart(self.amount_of_draw_numbers, self._numbers_chart))
+        print(self.cmd_output.create_table_chart(self.amount_of_draw_numbers,
+                                                 self._numbers_chart))
 
     def count_date(self):
         """Counts passing the time by weeks"""

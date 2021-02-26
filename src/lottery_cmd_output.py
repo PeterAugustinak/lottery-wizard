@@ -55,7 +55,7 @@ class LotteryCmdOutput:
         self.table_draw.align = "l"
         return self.table_draw
 
-    def create_table_stat(self, guessed_table):
+    def create_table_stat(self, guessed_table, draw_counter):
         self.table_stat.title = texts['tab_title_stat'][self.lang]
 
         self.table_stat.field_names = [texts['table_f1'][self.lang],
@@ -88,10 +88,10 @@ class LotteryCmdOutput:
                     f"{i} {texts[nm][self.lang]}",
                     guess_num[0][0],
                     f"#{guess_num[0][1] if guess_num[0][1] > 0 else '-'}",
-                    self.count_percentage(guess_num[0][0]),
+                    self.count_percentage(draw_counter, guess_num[0][0]),
                     guess_num[1][0],
                     f"#{guess_num[1][1] if guess_num[1][1] > 0 else '-'}",
-                    self.count_percentage(guessed_table[key][1][0]),
+                    self.count_percentage(draw_counter, guessed_table[key][1][0]),
                 ]
              )
 
