@@ -1,9 +1,9 @@
 # coding=utf-8
 
 # local library imports
-from lottery import Lottery
+from user_lottery_config import UserLotteryConfig
+from lottery_engine import LotteryEngine
 from texts import texts
-from env import ver
 # standard library imports
 from os import system
 import msvcrt
@@ -14,7 +14,25 @@ from prettytable import PrettyTable
 def main():
     """Main function"""
 
-    """User will at first select language for the Lottery app"""
+    lang = language_settings()
+
+    system('cls')
+    welcome_table(lang)
+    print()
+
+    user = UserLotteryConfig(lang)
+    user.user_inputs()
+
+    lottery = LotteryEngine(lang,
+                            user.lottery_pool,
+                            user.amount_of_draw_numbers,
+                            user.lottery_numbers,
+                            user.draws_per_week)
+
+    lottery.start_lottery()
+
+def language_settings():
+    """UserLotteryConfig will at first select language for the LotteryEngine app"""
     system('cls')
     print("1. EN\n"
           "2. SK\n")
@@ -23,16 +41,11 @@ def main():
     # 0 = English, 1 = Slovak
     try:
         if int(lang_input) != 2:
-            lottery = Lottery(0)
+            return 0
         else:
-            lottery = Lottery(1)
+            return 1
     except ValueError:
-        lottery = Lottery(0)
-
-    system('cls')
-    welcome_table(lottery.lang)
-    print()
-    lottery.user_inputs()
+        return 0
 
 def welcome_table(lang):
     """Draving welcome table"""
@@ -41,7 +54,6 @@ def welcome_table(lang):
     table_welcome.add_rows([
         [texts['welcome1'][lang]],
         [texts['welcome2'][lang]],
-        [f"{texts['welcome3'][lang]}{ver}"]
         ])
 
     print(table_welcome)

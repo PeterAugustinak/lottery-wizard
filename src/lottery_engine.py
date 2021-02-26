@@ -1,10 +1,10 @@
 # coding=utf-8
-"""The Lottery project"""
+"""LotteryEngine Class"""
 
 # local library import
 from texts import texts
+from common import pick_random_numbers
 # standard library imports
-import random
 from os import system
 from datetime import datetime, timedelta
 # external library imports
@@ -12,20 +12,19 @@ from prettytable import PrettyTable
 from itertools import islice
 
 
-class Lottery:
-    """Lottery class"""
+class LotteryEngine:
+    """LotteryEngine runs lottery drawing and statistics based on user configuration input"""
 
-    def __init__(self, language):
+    def __init__(self, language, lottery_pool, amount_of_draw_numbers, lottery_numbers, draws_per_week):
         self.lang = language
-        # counter for user input (in case of incorrect input only
-        self._user_has_no_or_incorrect_answer = True
-        self._lottery_pool = None
-        self._numbers_to_draw = None
+        self.lottery_pool = lottery_pool
+        self.amount_of_draw_numbers = amount_of_draw_numbers
+        self.user_defined_numbers = lottery_numbers
+        self.draws_per_week = draws_per_week
         # dicts to store current situation after every draw
         self._guessed_table = {}
         self._numbers_chart = {}
         # numbers for lottery
-        self._defined_numbers_for_draw = []
         self._random_numbers_for_draw = []
         self._drawn_numbers = []
         # counter of lottery tosses
@@ -34,154 +33,36 @@ class Lottery:
         self._current_date = None
         self._draws_per_week = None
 
-    def get_user_has_no_or_incorrect_answer(self):
-        """For testing purposes"""
-        return self._user_has_no_or_incorrect_answer
-
-    # USER INPUTS HANDLING BEFORE LOTTERY CAN START ###
-    def user_inputs(self):
-        """This clarifies if user want to use his own numbers or just leave it for random AI choices"""
-        # how many numbers will have lottery
-        self.print_input_text_lottery_pool()
-        while self._user_has_no_or_incorrect_answer:
-            self.parse_lottery_pool_input(input("-> "))
-
-        self._user_has_no_or_incorrect_answer = True
-        # how many numbers is going to be drawn
-        self.print_input_text_amount_of_draw_numbers()
-        while self._user_has_no_or_incorrect_answer:
-            self.parse_amount_of_draw_numbers(input("-> "))
-
-        self._user_has_no_or_incorrect_answer = True
-        # define user numbers for draw
-        self.print_input_text_define_numbers()
-        while self._user_has_no_or_incorrect_answer:
-            self.parse_draw_numbers_input(input("-> "))
-
-        self._user_has_no_or_incorrect_answer = True
-        # ask user for input draws per week value till the format is correct
-        self.print_input_text_draws_per_week()
-        while self._user_has_no_or_incorrect_answer:
-            self.parse_draws_per_week_input(input("-> "))
-
-        self.start_lottery()
-
-    # USER INPUTS TEXTS
-    def print_input_text_lottery_pool(self):
-        """Prints text explaining how to input lottery pool nummbers"""
-        print(f"{texts['text_pool_input1'][self.lang]}\n{texts['text_pool_input2'][self.lang]}")
-
-    def print_input_text_amount_of_draw_numbers(self):
-        """Print text explaining how to input amount of numbers to be drawn"""
-        print(f"{texts['input_amount_of_draw1'][self.lang]}\n{texts['input_amount_of_draw2'][self.lang]}")
-
-    def print_input_text_define_numbers(self):
-        """Prints text explaining how to input numbers for draw"""
-        text = f"{texts['intro1-1'][self.lang]}{self._numbers_to_draw}{texts['intro1-2'][self.lang]}" \
-               f"{self._lottery_pool}{texts['intro1-3'][self.lang]}\n" \
-               f"{texts['intro1-4'][self.lang]}{' '.join(map(str, sorted(self.random_numbers())))})"
-        print(text)
-
-    def print_input_text_draws_per_week(self):
-        """Prints text explaining how to input draws per week"""
-        print(f"{texts['text_draws_per_input1'][self.lang]}\n{texts['text_draws_per_input2'][self.lang]}")
-
-    # PARSERS AND VALIDATORS OF USER INPUTS
-    def parse_lottery_pool_input(self, user_input):
-        """Parses user input for numbers in lottery pool"""
-        try:
-            pool = int(user_input)
-            self.validate_lottery_pool_input(pool)
-        except ValueError:
-            self.failed_validation('val_error_int2')
-
-    def validate_lottery_pool_input(self, pool):
-        """Validates lottery pool after passed input parsing"""
-        if 35 <= pool <= 100:
-            self._lottery_pool = pool
-            self.set_numbers_chart()
-            self._user_has_no_or_incorrect_answer = False
-        else:
-            self.failed_validation('val_error_range')
-
-    def parse_amount_of_draw_numbers(self, user_input):
-        """Parses user input for amount of draw numbers"""
-        try:
-            numbers_to_draw = int(user_input)
-            self.validate_amount_of_draw_numbers(numbers_to_draw)
-        except ValueError:
-            self.failed_validation('val_error_int2')
-
-    def validate_amount_of_draw_numbers(self, numbers_to_draw):
-        """Validates numbers to draw after passed input parsing"""
-        if 1 <= numbers_to_draw <= 10:
-            self._numbers_to_draw = numbers_to_draw
-            self.set_guessed_table()
-            self._user_has_no_or_incorrect_answer = False
-        else:
-            self.failed_validation('val_error_range')
-
-    def parse_draw_numbers_input(self, user_input):
-        """Parses user input for draw numbers"""
-        try:
-            numbers = [int(element) for element in user_input.split() if int(element) in range(1, self._lottery_pool + 1)]
-            self.validate_draw_numbers_input(numbers)
-        except ValueError:
-            self.failed_validation('val_error_int')
-
-    def validate_draw_numbers_input(self, numbers):
-        """Validates draw numbers input after passed input parsing"""
-        if len(numbers) == self._numbers_to_draw:
-            self._defined_numbers_for_draw = sorted(numbers)
-            self._user_has_no_or_incorrect_answer = False
-        else:
-            self.failed_validation('val_error_count')
-
-    def parse_draws_per_week_input(self, user_input):
-        """Parses user input for draws per week"""
-        try:
-            self._draws_per_week = int(user_input)
-            self._user_has_no_or_incorrect_answer = False
-        except ValueError:
-            self.failed_validation('val_error_int')
-
-    def failed_validation(self, val_error):
-        """This prints the reason of incorrect validation and starts user input again"""
-        self._user_has_no_or_incorrect_answer = True
-        print(f" {texts[val_error][self.lang]}")
-
     # TABLES SETTERS
-    def set_numbers_chart(self):
-        """This will initiate the pool of numbers the particular lottery contain"""
-        for number in range(1, self._lottery_pool + 1):
-            self._numbers_chart.update({number: 0})
-
     def set_guessed_table(self):
-        """This will set disctionary to store how much time the particular nnumber was guessed based on amount of
+        """Sets table to store how much time the particular nnumber was guessed based on amount of
         numbers to draw"""
-        for number in range(0, self._numbers_to_draw + 1):
+        for number in range(0, self.amount_of_draw_numbers + 1):
             # {numbers guessed in round: ([user def nums, first guess in draw], [random nums, first guessed in draw)]
             self._guessed_table.update({number: ([0, 0], [0, 0])})
 
+    def set_numbers_chart(self):
+        """Sets table for numbers chart baesed on lottery pool value"""
+        for number in range(1, self.lottery_pool + 1):
+            self._numbers_chart.update({number: 0})
+
     # START OF LOTTERY DRAWINGS
     def start_lottery(self):
-        """This will toss lottery"""
-        guessed_all = self._guessed_table[self._numbers_to_draw]
+        self.set_guessed_table()
+        self.set_numbers_chart()
+
+        guessed_all = self._guessed_table[self.amount_of_draw_numbers]
         while guessed_all[0][0] == 0 and guessed_all[1][0] == 0:
             self._draw_counter += 1
-            self._random_numbers_for_draw = sorted(self.random_numbers())
-            self._drawn_numbers = sorted(self.random_numbers())
-            self.evaluate_round(self._defined_numbers_for_draw, 0)
+            self._random_numbers_for_draw = pick_random_numbers(self.lottery_pool, self.amount_of_draw_numbers)
+            self._drawn_numbers = pick_random_numbers(self.lottery_pool, self.amount_of_draw_numbers)
+            self.evaluate_round(self.user_defined_numbers, 0)
             self.evaluate_round(self._random_numbers_for_draw, 1)
 
             system('cls')
             self.print_results()
 
         self.lottery_won()
-
-    def random_numbers(self):
-        """Picks 6 random numbers instead of the user"""
-        return random.sample(range(1, self._lottery_pool + 1), self._numbers_to_draw)
 
     def evaluate_round(self, numbers_for_draw, inpt):
         """
@@ -224,7 +105,7 @@ class Lottery:
         table_input.add_rows([
             [
                 texts['your_nums'][self.lang].upper(),
-                f"{' '.join(map(str, self._defined_numbers_for_draw))}        "
+                f"{' '.join(map(str, self.user_defined_numbers))}        "
             ],
             [
                 texts['random_nums'][self.lang].upper(),
@@ -310,7 +191,7 @@ class Lottery:
         """This creates table with numbers chart"""
         table_chart = PrettyTable()
 
-        table_chart.title = f"TOP {self._numbers_to_draw}{texts['tab_title_chart'][self.lang]}"
+        table_chart.title = f"TOP {self.amount_of_draw_numbers}{texts['tab_title_chart'][self.lang]}"
         table_chart.field_names = [texts['chart_top_nm'][self.lang],
                                    texts['chart_top_val'][self.lang],
                                    texts['chart_down_nm'][self.lang],
@@ -322,8 +203,8 @@ class Lottery:
         sorted_chart_top = dict(sorted(self._numbers_chart.items(), key=lambda item: item[1], reverse=True))
         sorted_chart_down = dict(sorted(self._numbers_chart.items(), key=lambda item: item[1]))
 
-        top = list(islice(sorted_chart_top.items(), 0, self._numbers_to_draw))
-        down = list(islice(sorted_chart_down.items(), 0, self._numbers_to_draw))
+        top = list(islice(sorted_chart_top.items(), 0, self.amount_of_draw_numbers))
+        down = list(islice(sorted_chart_down.items(), 0, self.amount_of_draw_numbers))
 
         for n_top, n_down in zip(top, down[::-1]):
             table_chart.add_row([n_top[0], n_top[1], n_down[0], n_down[1]])

@@ -1,8 +1,8 @@
 # coding=utf-8
-"""Unit tests for lottery.py module"""
+"""Unit tests for lottery_engine.py module"""
 
 # local library imports
-from src.lottery import Lottery
+from src.lottery_engine import LotteryEngine
 # standard library imports
 import unittest
 from unittest.mock import patch
@@ -10,10 +10,10 @@ import io
 
 
 class LottreyTest(unittest.TestCase):
-    """Unittest class for testing Lottery class"""
+    """Unittest class for testing LotteryEngine class"""
 
-    lottery_en = Lottery(0)
-    lottery_sk = Lottery(1)
+    lottery_en = LotteryEngine(0)
+    lottery_sk = LotteryEngine(1)
 
     def setUp(self):
         pass
@@ -23,7 +23,7 @@ class LottreyTest(unittest.TestCase):
 
     @patch('sys.stdout', new_callable=io.StringIO)
     def test_input_lottery_pool_text_en(self, mock_stdout):
-        expected = "How many numbers are in the pool for lottery? (35-100)\n" \
+        expected = "How many numbers are in the parsed_user_input for lottery? (35-100)\n" \
                    " (example: 49)"
         self.lottery_en.print_input_text_lottery_pool()
         assert mock_stdout.getvalue() == f'{expected}\n'
