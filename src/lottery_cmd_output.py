@@ -6,19 +6,23 @@ from texts import texts
 # external library imports
 from prettytable import PrettyTable
 from itertools import islice
+from datetime import datetime, timedelta
 
 
 class LotteryCmdOutput:
     """Creates statistics tables for cmd output"""
 
-    def __init__(self, lang):
+    def __init__(self, lang, draws_per_week):
         self.lang = lang
+        self.draws_per_week = draws_per_week
         self.table_input = PrettyTable(header=False)
         self.table_draw = PrettyTable(header=False)
         self.table_stat = PrettyTable()
         self.table_chart = PrettyTable()
+        self._current_date = None
 
     def create_table_input(self, user_defined_numbers, random_numbers, draws_per_week):
+        self.table_input.clear_rows()
         self.table_input.add_rows([
             [
                 texts['your_nums'][self.lang].upper(),
@@ -37,11 +41,12 @@ class LotteryCmdOutput:
         self.table_input.align = "l"
         return self.table_input
 
-    def create_table_draw(self, date, draw_counter, drawn_numbers):
+    def create_table_draw(self, draw_counter, drawn_numbers):
+        self.table_draw.clear_rows()
         self.table_draw.add_rows([
             [
                 texts['date'][self.lang].upper(),
-                date
+                self.count_date(draw_counter)
             ],
             [
                 texts['draw'][self.lang],
@@ -54,6 +59,23 @@ class LotteryCmdOutput:
 
         self.table_draw.align = "l"
         return self.table_draw
+
+    def count_date(self, draw_counter):
+        """Counts passing the time by weeks"""
+
+        if self._current_date:
+            next_date = self._current_date + timedelta(days=7) if draw_counter % self.draws_per_week == 0 \
+                else self._current_date
+        else:
+            current_date = datetime.today()
+            next_date = current_date
+
+        current_week_year = datetime.date(next_date).isocalendar()
+        week = current_week_year[1] if current_week_year[1] > 9 else f"0{current_week_year[1]}"
+        year = current_week_year[0]
+
+        self._current_date = next_date
+        return f"{week}/{year}"
 
     def create_table_stat(self, guessed_table, draw_counter):
         self.table_stat.title = texts['tab_title_stat'][self.lang]
@@ -74,6 +96,7 @@ class LotteryCmdOutput:
         self.table_stat.align[texts['table_f6'][self.lang]] = "r"
         self.table_stat.align[texts['table_f7'][self.lang]] = "r"
 
+        self.table_stat.clear_rows()
         for i, key in zip(range(len(guessed_table)), guessed_table.keys()):
             if i == 0:
                 nm = 'num'
@@ -83,6 +106,7 @@ class LotteryCmdOutput:
                 nm = 'numss'
 
             guess_num = guessed_table[key]
+
             self.table_stat.add_row(
                 [
                     f"{i} {texts[nm][self.lang]}",
@@ -118,6 +142,7 @@ class LotteryCmdOutput:
         top = list(islice(sorted_chart_top.items(), 0, amount_of_draw_numbers))
         down = list(islice(sorted_chart_down.items(), 0, amount_of_draw_numbers))
 
+        self.table_chart.clear_rows()
         for n_top, n_down in zip(top, down[::-1]):
             self.table_chart.add_row([n_top[0], n_top[1], n_down[0], n_down[1]])
 

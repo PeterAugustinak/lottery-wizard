@@ -7,7 +7,6 @@ from texts import texts
 from common import pick_random_numbers
 # standard library imports
 from os import system
-from datetime import datetime, timedelta
 
 
 class LotteryEngine:
@@ -27,11 +26,8 @@ class LotteryEngine:
         self._drawn_numbers = []
         # counter of lottery tosses
         self._draw_counter = 0
-        # date
-        self._current_date = None
-        self._draws_per_week = None
         # initialize object for building tables for cmd output
-        self.cmd_output = LotteryCmdOutput(language)
+        self.cmd_output = LotteryCmdOutput(language, draws_per_week)
 
     # TABLES SETTERS
     def set_guessed_table(self):
@@ -92,8 +88,7 @@ class LotteryEngine:
                                                  self._random_numbers_for_draw,
                                                  self.draws_per_week, ))
         print()
-        print(self.cmd_output.create_table_draw(self.count_date(),
-                                                self._draw_counter,
+        print(self.cmd_output.create_table_draw(self._draw_counter,
                                                 self._drawn_numbers))
         print()
         print(texts['note'][self.lang])
@@ -102,23 +97,6 @@ class LotteryEngine:
         print()
         print(self.cmd_output.create_table_chart(self.amount_of_draw_numbers,
                                                  self._numbers_chart))
-
-    def count_date(self):
-        """Counts passing the time by weeks"""
-
-        if self._current_date:
-            next_date = self._current_date + timedelta(days=7) if self._draw_counter % self._draws_per_week == 0 \
-                else self._current_date
-        else:
-            self._current_date = datetime.today()
-            next_date = self._current_date
-
-        current_week_year = datetime.date(next_date).isocalendar()
-        week = current_week_year[1] if current_week_year[1] > 9 else f"0{current_week_year[1]}"
-        year = current_week_year[0]
-
-        self._current_date = next_date
-        return f"{week}/{year}"
 
     def lottery_won(self):
         """In case of 6 numbers of 6 was guessed correctly - means lottery is won, the tossing will stop"""
@@ -131,4 +109,3 @@ class LotteryEngine:
     def count_years(self):
         """This counts the time evaluated to win"""
         return round(self._draw_counter / 52, 0)
-
