@@ -96,16 +96,6 @@ texts = {
     'drawn_nums':
         ["Drawn numbers",
          "Vylosované čísla"],
-
-    'won1':
-        ['YOU WON ON TOSS #',
-         'VYHRAL SI V ŤAHU #'],
-    'your_was':
-        ['Your numbers was',
-         'Tvoje čísla boli'],
-    'drawn_was':
-        ['and drawn numbers was',
-         'a vylosované čísla boli'],
     'tab_title_chart':
         [' MOST VS LESS DRAWN NUMBERS',
          ' NAJVIAC VS NAJMENEJ ŤAHANÉ ČÍSLA'],
@@ -121,13 +111,6 @@ texts = {
     'chart_down_val':
         ['Drawn x ↓',
          'Padlo x ↓'],
-    'won2':
-        [
-            'If you will put a lottery 1 per week, you need approximatelly',
-            'Ak budeš vsádzať 1 krát do týždňa, budeš potrebovať približne '],
-    'won3':
-        ['years to win.',
-         'rokov na výhru.'],
     'draws_p_w':
         [
             'Draws per week',
@@ -155,6 +138,40 @@ texts = {
          'Koľko čísel sa žrebuje v jednom ťahu v tejto lotérií? (1-10)'],
     'input_amount_of_draw2':
         [' (example: 6)',
-         ' (príklad: 6)']
+         ' (príklad: 6)'],
+    # WIN SITUATION
+    'won1':
+        ['YOU WON ON DRAW #',
+         'VYHRAL SI V ŤAHU #'],
+    'won1-date':
+        ['The date is',
+         'Dátum je'],
+
+    'your_was':
+        ['Your numbers was',
+         'Tvoje čísla boli'],
+    'drawn_was':
+        ['and drawn numbers was',
+         'a vylosované čísla boli'],
+    'won2':
+        [
+            'If you will put a lottery 1 per week, you need approximatelly',
+            'Ak budeš vsádzať 1 krát do týždňa, budeš potrebovať približne '],
+    'won3':
+        ['years to win.',
+         'rokov na výhru.'],
+    'random_won1':
+        ['The random numbers',
+         'Náhodné čísla'],
+    'random_won2':
+        ['won in draw #',
+         'vyhrali v ťahu #'],
+    'random_won3':
+        ['If you would bet on random numbers every round, you could have taken a jackpot on week',
+         'Ak by si vsádzal každé losovanie na náhodné čísla, mohol si brať jackpot v týždni'],
+    'random_won4':
+        ['of year',
+         'roku'],
+
 }
 

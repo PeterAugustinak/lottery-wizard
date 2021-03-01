@@ -19,7 +19,7 @@ class LotteryCmdOutput:
         self.table_draw = PrettyTable(header=False)
         self.table_stat = PrettyTable()
         self.table_chart = PrettyTable()
-        self._current_date = None
+        self.current_date = None
 
     def create_table_input(self, user_defined_numbers, random_numbers, draws_per_week):
         self.table_input.clear_rows()
@@ -63,19 +63,25 @@ class LotteryCmdOutput:
     def count_date(self, draw_counter):
         """Counts passing the time by weeks"""
 
-        if self._current_date:
-            next_date = self._current_date + timedelta(days=7) if draw_counter % self.draws_per_week == 0 \
-                else self._current_date
+        if self.current_date:
+            next_date = self.current_date + timedelta(days=7) if draw_counter % self.draws_per_week == 0 \
+                else self.current_date
         else:
             current_date = datetime.today()
             next_date = current_date
 
-        current_week_year = datetime.date(next_date).isocalendar()
-        week = current_week_year[1] if current_week_year[1] > 9 else f"0{current_week_year[1]}"
-        year = current_week_year[0]
+        week, year = self.current_week_year(next_date)
 
-        self._current_date = next_date
+        self.current_date = next_date
         return f"{week}/{year}"
+
+    @staticmethod
+    def current_week_year(date):
+        week_year = datetime.date(date).isocalendar()
+        week = week_year[1] if week_year[1] > 9 else f"0{week_year[1]}"
+        year = week_year[0]
+
+        return week, year
 
     def create_table_stat(self, guessed_table, draw_counter):
         self.table_stat.title = texts['tab_title_stat'][self.lang]
@@ -147,3 +153,17 @@ class LotteryCmdOutput:
             self.table_chart.add_row([n_top[0], n_top[1], n_down[0], n_down[1]])
 
         return self.table_chart
+
+    def random_numbers_won(self, random_numbers_won, draw):
+        week, year = self.current_week_year(self.current_date)
+
+        print(f"{texts['random_won1'][self.lang]} {' '.join(map(str, random_numbers_won))} "
+              f"{texts['random_won2'][self.lang]}{draw}!!!")
+        print(f"{texts['random_won3'][self.lang]} {week}, {texts['random_won4'][self.lang]} {year}.")
+
+
+#
+# cmd = LotteryCmdOutput(0, 2)
+# cmd.current_date = datetime.today()
+# cmd.random_numbers_won([1, 2, 3, 4, 5, 6], 3434)
+

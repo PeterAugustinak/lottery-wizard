@@ -28,6 +28,8 @@ class LotteryEngine:
         self._draw_counter = 0
         # initialize object for building tables for cmd output
         self.cmd_output = LotteryCmdOutput(language, draws_per_week)
+        self._user_defined_numbers_won = False
+        self._random_numbers_won = False
 
     # TABLES SETTERS
     def set_guessed_table(self):
@@ -47,8 +49,7 @@ class LotteryEngine:
         self.set_guessed_table()
         self.set_numbers_chart()
 
-        guessed_all = self._guessed_table[self.amount_of_draw_numbers]
-        while guessed_all[0][0] == 0 and guessed_all[1][0] == 0:
+        while not self._user_defined_numbers_won:
             self._draw_counter += 1
             self._random_numbers_for_draw = pick_random_numbers(self.lottery_pool, self.amount_of_draw_numbers)
             self._drawn_numbers = pick_random_numbers(self.lottery_pool, self.amount_of_draw_numbers)
@@ -63,12 +64,19 @@ class LotteryEngine:
     def evaluate_round(self, numbers_for_draw, inpt):
         """
         This will compare numbers for draw against drawn numbers for the round
+        numbers_for_draw - either user_defined_numbers or _random_numbers_for_draw
         inpt: 0 -> user defined draw numbers
         inpt: 1 -> random defined draw numbers
         Also it shows online output
         """
         guessed = len(set(numbers_for_draw).intersection(self._drawn_numbers))
         self._guessed_table[guessed][inpt][0] += 1
+
+        # check for win - if all numbers was guessed
+        guessed_all = self._guessed_table[self.amount_of_draw_numbers]
+        if guessed_all[inpt][0] == 1:
+            if inpt == 0: self._user_defined_numbers_won = True
+            if inpt == 1: self._random_numbers_won = self._random_numbers_for_draw
 
         # check if this number of guessed numbers is first time
         if self._guessed_table[guessed][inpt][1] > 0:
@@ -77,7 +85,7 @@ class LotteryEngine:
         else:
             self._guessed_table[guessed][inpt][1] = self._draw_counter
 
-        # putting data data into numbers chart
+        # putting data into numbers chart
         for number in self._drawn_numbers:
             self._numbers_chart[number] += 1
 
@@ -97,11 +105,15 @@ class LotteryEngine:
         print()
         print(self.cmd_output.create_table_chart(self.amount_of_draw_numbers,
                                                  self._numbers_chart))
+        print()
+        if self._random_numbers_won:
+            draw = self._guessed_table[self.amount_of_draw_numbers][1][1]
+            self.cmd_output.random_numbers_won(self._random_numbers_won, draw)
 
     def lottery_won(self):
-        """In case of 6 numbers of 6 was guessed correctly - means lottery is won, the tossing will stop"""
         print()
         print(f"!!! {texts['won1'][self.lang]}{self._draw_counter}!!!")
+        print(f"{texts['won-date']} {self.cmd_output.current_date}")
         # print(f"{texts['your_was'][self.lang]} {self._defined_numbers_for_draw} {texts['drawn_was'][self.lang]} "
         # f"{self._drawn_numbers}!!!")
         print(f"{texts['won2'][self.lang]} {self.count_years()} {texts['won3'][self.lang]}")
