@@ -76,11 +76,11 @@ texts = {
         ["Success % (R)",
          "Úspešnosť % (N)"],
     'num':
-        ["numbers",
-         "čísel"],
-    'nums':
         ["number",
          "číslo"],
+    'nums':
+        ["numbers",
+         "čísla"],
     'numss':
         ["numbers",
          "čísel"],

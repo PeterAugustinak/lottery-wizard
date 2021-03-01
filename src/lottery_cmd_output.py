@@ -105,8 +105,10 @@ class LotteryCmdOutput:
         self.table_stat.clear_rows()
         for i, key in zip(range(len(guessed_table)), guessed_table.keys()):
             if i == 0:
-                nm = 'num'
+                nm = 'numss'
             elif i == 1:
+                nm = 'num'
+            elif 1 < i < 5:
                 nm = 'nums'
             else:
                 nm = 'numss'
