@@ -1,2 +1,4 @@
 # coding=utf-8
-ver = "1.0.0"
+"""Environment version file"""
+
+VER = "1.0.0"
