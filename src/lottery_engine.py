@@ -1,18 +1,20 @@
 # coding=utf-8
 """LotteryEngine Class"""
 
+# standard library imports
+from os import system
 # local library import
 from lottery_cmd_output import LotteryCmdOutput
 from texts import texts
 from common import pick_random_numbers
-# standard library imports
-from os import system
 
 
 class LotteryEngine:
-    """LotteryEngine runs lottery drawing and statistics based on user configuration input"""
+    """LotteryEngine runs lottery drawing and statistics based on user
+     configuration input"""
 
-    def __init__(self, language, lottery_pool, amount_of_draw_numbers, lottery_numbers, draws_per_week):
+    def __init__(self, language, lottery_pool, amount_of_draw_numbers,
+                 lottery_numbers, draws_per_week):
         self.lang = language
         self.lottery_pool = lottery_pool
         self.amount_of_draw_numbers = amount_of_draw_numbers
@@ -33,10 +35,12 @@ class LotteryEngine:
 
     # TABLES SETTERS
     def set_guessed_table(self):
-        """Sets table to store how much time the particular nnumber was guessed based on amount of
-        numbers to draw"""
+        """Sets table to store how much time the particular nnumber was
+         guessed based on amount of numbers to draw"""
+
         for number in range(0, self.amount_of_draw_numbers + 1):
-            # {numbers guessed in round: ([user def nums, first guess in draw], [random nums, first guessed in draw)]
+            # {numbers guessed in round: ([user def nums, first guess in draw],
+            # [random nums, first guessed in draw)]
             self._guessed_table.update({number: ([0, 0], [0, 0])})
 
     def set_numbers_chart(self):
@@ -51,8 +55,10 @@ class LotteryEngine:
 
         while not self._user_defined_numbers_won:
             self._draw_counter += 1
-            self._random_numbers_for_draw = pick_random_numbers(self.lottery_pool, self.amount_of_draw_numbers)
-            self._drawn_numbers = pick_random_numbers(self.lottery_pool, self.amount_of_draw_numbers)
+            self._random_numbers_for_draw = pick_random_numbers(
+                self.lottery_pool, self.amount_of_draw_numbers)
+            self._drawn_numbers = pick_random_numbers(
+                self.lottery_pool, self.amount_of_draw_numbers)
             self.evaluate_round(self.user_defined_numbers, 0)
             self.evaluate_round(self._random_numbers_for_draw, 1)
 
@@ -64,7 +70,8 @@ class LotteryEngine:
     def evaluate_round(self, numbers_for_draw, inpt):
         """
         This will compare numbers for draw against drawn numbers for the round
-        numbers_for_draw - either user_defined_numbers or _random_numbers_for_draw
+        numbers_for_draw - either user_defined_numbers or
+        _random_numbers_for_draw
         inpt: 0 -> user defined draw numbers
         inpt: 1 -> random defined draw numbers
         Also it shows online output
@@ -75,8 +82,10 @@ class LotteryEngine:
         # check for win - if all numbers was guessed
         guessed_all = self._guessed_table[self.amount_of_draw_numbers]
         if guessed_all[inpt][0] == 1:
-            if inpt == 0: self._user_defined_numbers_won = True
-            if inpt == 1: self._random_numbers_won = self._random_numbers_for_draw
+            if inpt == 0:
+                self._user_defined_numbers_won = True
+            if inpt == 1:
+                self._random_numbers_won = self._random_numbers_for_draw
 
         # check if this number of guessed numbers is first time
         if self._guessed_table[guessed][inpt][1] > 0:
@@ -114,9 +123,11 @@ class LotteryEngine:
         print()
         print(f"!!! {texts['won1'][self.lang]}{self._draw_counter}!!!")
         print(f"{texts['won-date']} {self.cmd_output.current_date}")
-        # print(f"{texts['your_was'][self.lang]} {self._defined_numbers_for_draw} {texts['drawn_was'][self.lang]} "
+        # print(f"{texts['your_was'][self.lang]}
+        # {self._defined_numbers_for_draw} {texts['drawn_was'][self.lang]} "
         # f"{self._drawn_numbers}!!!")
-        print(f"{texts['won2'][self.lang]} {self.count_years()} {texts['won3'][self.lang]}")
+        print(f"{texts['won2'][self.lang]} {self.count_years()} "
+              f"{texts['won3'][self.lang]}")
 
     def count_years(self):
         """This counts the time evaluated to win"""

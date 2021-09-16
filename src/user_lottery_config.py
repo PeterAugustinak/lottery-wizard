@@ -1,4 +1,5 @@
 # coding=utf-8
+"""Module to set user configuration before the lottery can be run"""
 
 # local library imports
 from texts import texts
@@ -6,7 +7,8 @@ from common import pick_random_numbers
 
 
 class UserLotteryConfig:
-    """Class for setting user defined lottery where the output is lottery settings"""
+    """Class for setting user defined lottery where the output is lottery
+     settings"""
 
     def __init__(self, lang):
         self.lang = lang
@@ -49,20 +51,26 @@ class UserLotteryConfig:
 
     # USER INPUTS TEXTS
     def print_input_text_lottery_pool(self):
-        print(f"{texts['text_pool_input1'][self.lang]}\n{texts['text_pool_input2'][self.lang]}")
+        print(f"{texts['text_pool_input1'][self.lang]}\n \
+        {texts['text_pool_input2'][self.lang]}")
 
     def print_input_text_amount_of_draw_numbers(self):
-        print(f"{texts['input_amount_of_draw1'][self.lang]}\n{texts['input_amount_of_draw2'][self.lang]}")
+        print(f"{texts['input_amount_of_draw1'][self.lang]}\n \
+        {texts['input_amount_of_draw2'][self.lang]}")
 
     def print_input_text_define_numbers(self):
-        random_numbers = pick_random_numbers(self.lottery_pool, self.amount_of_draw_numbers)
-        text = f"{texts['intro1-1'][self.lang]}{self.amount_of_draw_numbers}{texts['intro1-2'][self.lang]}" \
+        random_numbers = pick_random_numbers(self.lottery_pool,
+                                             self.amount_of_draw_numbers)
+        text = f"{texts['intro1-1'][self.lang]}{self.amount_of_draw_numbers}" \
+               f"{texts['intro1-2'][self.lang]}" \
                f"{self.lottery_pool}{texts['intro1-3'][self.lang]}\n" \
-               f"{texts['intro1-4'][self.lang]}{' '.join(map(str, sorted(random_numbers)))})"
+               f"{texts['intro1-4'][self.lang]}" \
+               f"{' '.join(map(str, sorted(random_numbers)))})"
         print(text)
 
     def print_input_text_draws_per_week(self):
-        print(f"{texts['text_draws_per_input1'][self.lang]}\n{texts['text_draws_per_input2'][self.lang]}")
+        print(f"{texts['text_draws_per_input1'][self.lang]}\n \
+        {texts['text_draws_per_input2'][self.lang]}")
 
     # PARSERS AND VALIDATORS OF USER INPUTS
 
@@ -97,7 +105,8 @@ class UserLotteryConfig:
     def parse_user_lottery_numbers_input(self, user_input):
         try:
             parsed_user_input = [int(element) for element in user_input.split()
-                                 if int(element) in range(1, self.lottery_pool + 1)]
+                                 if int(element) in
+                                 range(1, self.lottery_pool + 1)]
             self.validate_user_lottery_numbers_input(parsed_user_input)
         except ValueError:
             self.failed_validation('val_error_int')
@@ -119,4 +128,3 @@ class UserLotteryConfig:
     def failed_validation(self, val_error):
         self._user_has_no_or_incorrect_answer = True
         print(f" {texts[val_error][self.lang]}")
-
