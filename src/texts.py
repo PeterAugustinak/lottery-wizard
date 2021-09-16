@@ -40,8 +40,10 @@ texts = {
             'Prosím zadaj číselné znaky.'],
     'val_error_count':
         [
-            'Please enter that many numbers and in that range as is valid for draw.',
-            'Prosím zadaj presne toľko čísel a v takom rozmedzí, ako je potrebné pre losovanie.'],
+            'Please enter that many numbers and in that range as is valid'
+            ' for draw.',
+            'Prosím zadaj presne toľko čísel a v takom rozmedzí, ako je '
+            'potrebné pre losovanie.'],
     'val_error_range':
         [
             'Please enter the number in range specified.',
@@ -134,7 +136,8 @@ texts = {
             ' (example: 49)',
             ' (príklad: 49)'],
     'input_amount_of_draw1':
-        ['How many numbers is going to be drawn every draw in this lottery? (1-10)',
+        ['How many numbers is going to be drawn every draw in this lottery?'
+         ' (1-10)',
          'Koľko čísel sa žrebuje v jednom ťahu v tejto lotérií? (1-10)'],
     'input_amount_of_draw2':
         [' (example: 6)',
@@ -167,11 +170,11 @@ texts = {
         ['won in draw #',
          'vyhrali v ťahu #'],
     'random_won3':
-        ['If you would bet on random numbers every round, you could have taken a jackpot on week',
-         'Ak by si vsádzal každé losovanie na náhodné čísla, mohol si brať jackpot v týždni'],
+        ['If you would bet on random numbers every round, you could have taken'
+         ' a jackpot on week',
+         'Ak by si vsádzal každé losovanie na náhodné čísla, mohol si brať'
+         ' jackpot v týždni'],
     'random_won4':
         ['of year',
          'roku'],
-
 }
-
