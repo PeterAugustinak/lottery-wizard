@@ -129,7 +129,7 @@ texts = {
             ' (example: 1)',
             ' (príklad: 1)'],
     'text_pool_input1': [
-        'How many numbers are in the parsed_user_input for lottery? (35-100)',
+        'How many numbers are in the draw for this lottery? (35-100)',
         'Z koľkých čísel sa losuje v tejto lotérii? (35-100)'],
     'text_pool_input2':
         [
